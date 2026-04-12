@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Lim — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#f2ede3;--bg2:#ebe4d6;--green-deep:#1a3320;--green:#2b5a35;--green-mid:#437a4a;
+    --green-lt:#7ec47e;--green-pale:#d2ebd2;--green-xpale:#eaf5ea;
+    --ink:#1a2a1e;--ink-dim:rgba(26,42,30,0.55);--ink-faint:rgba(26,42,30,0.3);
+    --rule:rgba(43,90,53,0.13);--shadow:rgba(43,90,53,0.08);
+    --hn:#0d1b2a;--hy:#EFC84A;
+    /* Sigma exact colours from Figma */
+    --sg:#6a9e6a;        /* sage green header/buttons */
+    --sg-lt:#c8e0c8;     /* light sage backgrounds */
+    --sg-xlt:#e8f3e8;    /* very light sage */
+    --sg-grey:#9e9e9e;   /* muted grey interactive elements */
+    --sg-grey-lt:#e0e0e0;/* light grey */
+    --sg-bg:#f5f5f0;     /* off-white screen bg */
+    --sg-text:#2a2a2a;   /* dark text */
+  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif;font-weight:300;overflow-x:hidden;}
+  ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:var(--green-lt);border-radius:2px;}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1.3rem 5rem;background:rgba(242,237,227,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--rule);}
+  .nav-logo{font-family:'Fraunces',serif;font-size:1.15rem;font-weight:400;font-style:italic;color:var(--green);text-decoration:none;}
+  .nav-links{display:flex;gap:2.5rem;list-style:none;align-items:center;}
+  .nav-links a{font-size:0.78rem;font-weight:500;color:var(--ink-dim);text-decoration:none;transition:color 0.2s;}
+  .nav-links a:hover{color:var(--green);}
+  .nav-cta{font-size:0.75rem;font-weight:600;padding:0.55rem 1.4rem;border-radius:50px;background:var(--green);color:var(--bg);text-decoration:none;transition:background 0.2s,transform 0.2s;}
+  .nav-cta:hover{background:var(--green-mid);transform:translateY(-1px);}
+
+  /* HERO */
+  #hero{min-height:100vh;display:flex;align-items:center;padding:9rem 5rem 6rem;position:relative;overflow:hidden;}
+  .hero-blob{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;}
+  .blob1{width:700px;height:700px;background:rgba(126,196,126,0.18);top:-200px;right:-200px;animation:blobFloat 8s ease-in-out infinite;}
+  .blob2{width:450px;height:450px;background:rgba(43,90,53,0.09);bottom:-100px;left:-120px;animation:blobFloat 10s ease-in-out infinite reverse;}
+  @keyframes blobFloat{0%,100%{transform:translate(0,0);}50%{transform:translate(20px,-20px);}}
+  .hero-layout{display:grid;grid-template-columns:1fr 400px;gap:4rem;align-items:center;position:relative;z-index:2;width:100%;}
+  .hero-tag{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.72rem;font-weight:600;background:var(--green-pale);color:var(--green);padding:0.38rem 1rem;border-radius:50px;margin-bottom:1.8rem;opacity:0;animation:fadeUp 0.5s 0.15s forwards;}
+  .hero-dot{width:7px;height:7px;border-radius:50%;background:var(--green-lt);}
+  .hero-name{font-family:'Fraunces',serif;font-size:clamp(4rem,9vw,8.5rem);font-weight:300;line-height:0.95;margin-bottom:1.6rem;opacity:0;animation:fadeUp 0.6s 0.3s forwards;}
+  .hn-light{color:var(--ink-dim);font-style:italic;display:block;}
+  .hn-dark{color:var(--green-deep);font-weight:500;display:block;}
+  .hero-desc{font-size:1rem;color:var(--ink-dim);line-height:1.85;max-width:460px;margin-bottom:2.5rem;opacity:0;animation:fadeUp 0.6s 0.45s forwards;}
+  .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2.5rem;opacity:0;animation:fadeUp 0.6s 0.6s forwards;}
+  .btn-pill{font-size:0.8rem;font-weight:600;padding:0.85rem 2rem;border-radius:50px;text-decoration:none;display:inline-block;transition:all 0.25s;cursor:pointer;border:none;}
+  .bpf{background:var(--green);color:var(--bg);}
+  .bpf:hover{background:var(--green-mid);transform:translateY(-2px);box-shadow:0 10px 28px rgba(43,90,53,0.22);}
+  .bpo{background:transparent;color:var(--green);border:1.5px solid var(--green-lt);}
+  .bpo:hover{background:var(--green-pale);}
+  .hero-socials{display:flex;gap:1rem;opacity:0;animation:fadeUp 0.6s 0.75s forwards;}
+  .social-pill{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.72rem;font-weight:600;padding:0.45rem 1rem;border-radius:50px;border:1px solid var(--rule);color:var(--ink-dim);text-decoration:none;transition:all 0.2s;background:rgba(255,255,255,0.4);}
+  .social-pill:hover{border-color:var(--green-lt);color:var(--green);background:var(--green-xpale);}
+  .hero-card{background:var(--green-deep);border-radius:28px;padding:2.5rem;color:var(--bg);box-shadow:0 30px 70px rgba(26,51,32,0.25);opacity:0;animation:fadeUp 0.7s 0.5s forwards;}
+  .hc-label{font-size:0.62rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green-lt);margin-bottom:1.6rem;}
+  .hc-bio{font-size:0.88rem;line-height:1.8;color:rgba(242,237,227,0.65);margin-bottom:2rem;font-weight:300;}
+  .hc-row{display:flex;align-items:center;gap:0.85rem;margin-bottom:0.85rem;}
+  .hc-icon{width:34px;height:34px;border-radius:9px;background:rgba(126,196,126,0.13);border:1px solid rgba(126,196,126,0.15);display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;}
+  .hc-text{font-size:0.8rem;color:rgba(242,237,227,0.55);}
+  .hc-text strong{color:rgba(242,237,227,0.88);font-weight:500;}
+
+  /* SECTIONS */
+  section{padding:7rem 5rem;}
+  .sec-eyebrow{font-size:0.68rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green-mid);margin-bottom:0.75rem;display:flex;align-items:center;gap:1rem;}
+  .sec-eyebrow::after{content:'';flex:0 0 40px;height:1px;background:var(--green-lt);opacity:0.5;}
+  .sec-heading{font-family:'Fraunces',serif;font-size:clamp(2.4rem,4.5vw,4rem);font-weight:300;line-height:1.08;margin-bottom:3.5rem;}
+  .sec-heading em{font-style:italic;color:var(--green);}
+
+  /* ABOUT */
+  #about{background:var(--bg2);}
+  .about-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:5rem;align-items:start;}
+  .about-body p{font-size:0.97rem;color:var(--ink-dim);line-height:1.92;margin-bottom:1.3rem;}
+  .about-body p strong{color:var(--ink);font-weight:600;}
+  .skills-wrap{display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:2.5rem;}
+  .sk{font-size:0.75rem;font-weight:500;padding:0.45rem 1rem;border-radius:50px;background:var(--green-pale);color:var(--green);border:1px solid rgba(126,196,126,0.3);transition:all 0.2s;cursor:default;}
+  .sk:hover{background:var(--green);color:var(--bg);transform:translateY(-1px);}
+  .about-aside{display:flex;flex-direction:column;gap:1px;}
+  .aside-card{background:var(--bg);border:1px solid var(--rule);padding:1.3rem 1.6rem;transition:border-color 0.2s,box-shadow 0.2s;}
+  .aside-card:first-child{border-radius:16px 16px 0 0;}
+  .aside-card:last-child{border-radius:0 0 16px 16px;}
+  .aside-card:hover{border-color:var(--green-lt);box-shadow:0 4px 16px var(--shadow);z-index:1;}
+  .ac-label{font-size:0.6rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--green-mid);margin-bottom:0.4rem;}
+  .ac-val{font-size:0.9rem;font-weight:500;color:var(--ink);}
+  .ac-sub{font-size:0.78rem;color:var(--ink-dim);margin-top:0.15rem;}
+
+  /* PROJECTS */
+  #projects{background:var(--bg);}
+  .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+  .pcard{background:var(--bg2);border:1px solid var(--rule);border-radius:22px;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s,border-color 0.3s;}
+  .pcard:hover{transform:translateY(-5px);box-shadow:0 24px 60px rgba(43,90,53,0.13);border-color:var(--green-lt);}
+  .pcard.wide{grid-column:1/-1;}
+  .pcard-body{padding:2rem 2.2rem;}
+  .pcard-title{font-family:'Fraunces',serif;font-size:1.45rem;font-weight:400;margin-bottom:0.5rem;}
+  .pcard-sub{font-size:0.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--green-mid);margin-bottom:0.8rem;}
+  .pcard-desc{font-size:0.85rem;color:var(--ink-dim);line-height:1.78;margin-bottom:1.3rem;}
+  .pcard-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.3rem;}
+  .ptag{font-size:0.67rem;font-weight:600;padding:0.28rem 0.75rem;border-radius:50px;background:var(--green-xpale);color:var(--green);border:1px solid rgba(126,196,126,0.3);}
+  .mock-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(43,90,53,0.1);border:1px solid rgba(43,90,53,0.2);border-radius:50px;padding:0.25rem 0.8rem;font-size:0.65rem;font-weight:700;color:var(--green-mid);margin-bottom:1rem;}
+
+  /* KINETIC */
+  .kinetic-card{background:var(--hn);border:1px solid rgba(239,200,74,0.18);grid-column:1/-1;}
+  .kinetic-card:hover{transform:translateY(-4px);box-shadow:0 28px 70px rgba(0,0,0,0.35);border-color:rgba(239,200,74,0.38);}
+  .kc-head{padding:2.5rem 2.5rem 0;display:flex;justify-content:space-between;align-items:flex-start;gap:2rem;flex-wrap:wrap;}
+  .kc-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(239,200,74,0.1);border:1px solid rgba(239,200,74,0.25);border-radius:50px;padding:0.3rem 0.9rem;font-size:0.65rem;font-weight:700;letter-spacing:1px;color:var(--hy);margin-bottom:0.9rem;}
+  .kc-title{font-family:'Fraunces',serif;font-size:2.2rem;font-weight:400;color:#f0ebe0;margin-bottom:0.3rem;}
+  .kc-subtitle{font-size:0.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(239,200,74,0.55);}
+  .kc-meta-row{font-size:0.72rem;color:rgba(240,235,224,0.35);margin-bottom:0.3rem;}
+  .kc-meta-row strong{color:rgba(240,235,224,0.7);font-weight:500;}
+  .mock-banner{display:flex;align-items:center;gap:0.7rem;background:rgba(239,200,74,0.12);border:1px solid rgba(239,200,74,0.3);border-radius:10px;padding:0.75rem 1.1rem;margin:1.5rem 2.5rem 0;}
+  .mock-banner-text{font-size:0.78rem;color:rgba(240,235,224,0.75);line-height:1.5;}
+  .mock-banner-text strong{color:var(--hy);font-weight:600;}
+  .kinetic-proto-wrap{margin:2rem 2.5rem;border-radius:16px;overflow:hidden;border:1px solid rgba(239,200,74,0.15);background:#0a1520;}
+  .k-tabs{display:flex;background:#0d1b2a;border-bottom:1px solid rgba(239,200,74,0.12);}
+  .k-tab{font-family:'DM Sans',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.5px;padding:0.9rem 1.4rem;color:rgba(240,235,224,0.4);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap;}
+  .k-tab:hover{color:rgba(240,235,224,0.7);}
+  .k-tab.active{color:var(--hy);border-bottom-color:var(--hy);}
+  .k-panel{display:none;padding:2rem;}
+  .k-panel.active{display:block;}
+  .kdash-layout{display:grid;grid-template-columns:220px 1fr;gap:1.5rem;}
+  .kdash-sidebar{display:flex;flex-direction:column;gap:1rem;}
+  .kdash-nav{background:#0d1b2a;border-radius:12px;padding:1.2rem;border:1px solid rgba(255,255,255,0.05);}
+  .kd-logo-row{display:flex;align-items:center;gap:0.6rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .kd-logo-dot{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--hy),#f0a030);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;color:#0d1b2a;}
+  .kd-logo-text{font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;color:#f0ebe0;}
+  .kd-nav-item{display:flex;align-items:center;gap:0.7rem;padding:0.65rem 0.8rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:500;color:rgba(240,235,224,0.45);cursor:pointer;transition:all 0.15s;margin-bottom:2px;}
+  .kd-nav-item:hover{background:rgba(255,255,255,0.04);color:rgba(240,235,224,0.75);}
+  .kd-nav-item.active{background:rgba(239,200,74,0.1);color:var(--hy);}
+  .kdash-score-card{background:#0d1b2a;border-radius:12px;padding:1.4rem;border:1px solid rgba(239,200,74,0.15);text-align:center;}
+  .kds-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:rgba(239,200,74,0.6);margin-bottom:1rem;}
+  .kds-ring-wrap{position:relative;width:100px;height:100px;margin:0 auto 0.75rem;}
+  .kds-ring-svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .kds-ring-bg{fill:none;stroke:rgba(255,255,255,0.06);stroke-width:8;}
+  .kds-ring-fill{fill:none;stroke:var(--hy);stroke-width:8;stroke-linecap:round;stroke-dasharray:251;stroke-dashoffset:52;}
+  .kds-score-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .kds-num{font-family:'DM Sans',sans-serif;font-size:1.8rem;font-weight:700;color:#f0ebe0;}
+  .kds-den{font-family:'DM Mono',monospace;font-size:0.55rem;color:rgba(240,235,224,0.3);}
+  .tier-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(239,200,74,0.15);border:1px solid rgba(239,200,74,0.3);border-radius:50px;padding:0.3rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.7rem;font-weight:700;color:var(--hy);}
+  .kdash-main{display:flex;flex-direction:column;gap:1rem;}
+  .kdash-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;}
+  .k-stat-card{background:#0d1b2a;border-radius:12px;padding:1.1rem 1.2rem;border:1px solid rgba(255,255,255,0.05);transition:border-color 0.2s;}
+  .k-stat-card:hover{border-color:rgba(239,200,74,0.2);}
+  .ks-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(240,235,224,0.35);margin-bottom:0.5rem;}
+  .ks-val{font-family:'DM Sans',sans-serif;font-size:1.6rem;font-weight:700;color:#f0ebe0;}
+  .ks-trend{font-size:0.68rem;font-weight:600;color:#7ec47e;margin-top:0.2rem;}
+  .k-access-card,.k-activity-card{background:#0d1b2a;border-radius:12px;padding:1.2rem 1.4rem;border:1px solid rgba(255,255,255,0.05);}
+  .k-access-title,.k-act-title{font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;color:#f0ebe0;margin-bottom:1rem;}
+  .k-tier-row{display:flex;align-items:center;gap:1rem;padding:0.7rem 0.9rem;border-radius:8px;margin-bottom:0.4rem;transition:background 0.15s;cursor:default;}
+  .k-tier-row:hover{background:rgba(255,255,255,0.03);}
+  .k-tier-row.current{background:rgba(239,200,74,0.08);border:1px solid rgba(239,200,74,0.18);}
+  .k-tier-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+  .k-tier-name{font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:600;color:rgba(240,235,224,0.7);flex:1;}
+  .k-tier-row.current .k-tier-name{color:var(--hy);}
+  .k-tier-range{font-family:'DM Mono',monospace;font-size:0.65rem;color:rgba(240,235,224,0.3);}
+  .k-tier-status{font-size:0.65rem;font-weight:600;padding:0.2rem 0.6rem;border-radius:4px;}
+  .k-status-locked{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.25);}
+  .k-status-open{background:rgba(126,196,126,0.15);color:#7ec47e;}
+  .k-status-current{background:rgba(239,200,74,0.2);color:var(--hy);}
+  .k-act-row{display:flex;align-items:center;gap:0.8rem;padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .k-act-row:last-child{border-bottom:none;}
+  .k-act-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .k-act-text{font-size:0.78rem;color:rgba(240,235,224,0.55);flex:1;}
+  .k-act-text strong{color:rgba(240,235,224,0.8);font-weight:500;}
+  .k-act-time{font-family:'DM Mono',monospace;font-size:0.62rem;color:rgba(240,235,224,0.25);}
+  .k-act-pts{font-family:'DM Mono',monospace;font-size:0.68rem;font-weight:500;color:var(--hy);}
+  .kpipe-layout{max-width:700px;margin:0 auto;}
+  .kpipe-title{font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;color:#f0ebe0;margin-bottom:0.4rem;}
+  .kpipe-sub{font-size:0.82rem;color:rgba(240,235,224,0.45);margin-bottom:2rem;line-height:1.6;}
+  .kpipe-step{background:#0d1b2a;border-radius:12px;padding:1.3rem 1.5rem;border:1px solid rgba(255,255,255,0.06);margin-bottom:1rem;}
+  .kpipe-step-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:rgba(239,200,74,0.55);margin-bottom:0.4rem;}
+  .kpipe-step-title{font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;color:#f0ebe0;margin-bottom:0.3rem;}
+  .kpipe-step-desc{font-size:0.78rem;color:rgba(240,235,224,0.45);line-height:1.55;}
+  .kpipe-arrow{text-align:center;font-size:1.2rem;color:rgba(239,200,74,0.4);margin:0.3rem 0;}
+  .kpipe-split{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+  .kpipe-out{border-radius:12px;padding:1.3rem 1.5rem;border:1px solid;}
+  .kpipe-out.green-out{background:rgba(126,196,126,0.07);border-color:rgba(126,196,126,0.2);}
+  .kpipe-out.yellow-out{background:rgba(239,200,74,0.07);border-color:rgba(239,200,74,0.2);}
+  .kpipe-out-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:0.4rem;}
+  .green-out .kpipe-out-label{color:#7ec47e;}
+  .yellow-out .kpipe-out-label{color:var(--hy);}
+  .kpipe-out-title{font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;color:#f0ebe0;margin-bottom:0.3rem;}
+  .kpipe-out-desc{font-size:0.75rem;color:rgba(240,235,224,0.4);line-height:1.5;}
+  .kpipe-demo{background:rgba(239,200,74,0.06);border:1px solid rgba(239,200,74,0.15);border-radius:12px;padding:1.3rem 1.5rem;margin-top:1rem;}
+  .kpipe-demo-title{font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;color:var(--hy);margin-bottom:1rem;}
+  .kpipe-note-area{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:0.8rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.78rem;color:rgba(240,235,224,0.6);min-height:70px;outline:none;transition:border-color 0.2s;resize:vertical;line-height:1.6;}
+  .kpipe-note-area:focus{border-color:rgba(239,200,74,0.3);}
+  .kpipe-submit{margin-top:0.8rem;background:var(--hy);color:#0d1b2a;border:none;border-radius:8px;padding:0.6rem 1.4rem;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;transition:all 0.2s;}
+  .kpipe-submit:hover{background:#f0d060;transform:translateY(-1px);}
+  .kpipe-outputs-live{margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+  .kpipe-live-box{background:rgba(255,255,255,0.04);border-radius:8px;padding:0.8rem;}
+  .kpipe-live-label{font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.4rem;}
+  .green-live .kpipe-live-label{color:#7ec47e;}
+  .yellow-live .kpipe-live-label{color:var(--hy);}
+  .kpipe-live-content{font-size:0.72rem;color:rgba(240,235,224,0.5);line-height:1.55;}
+  .kcon-layout{display:grid;grid-template-columns:280px 1fr;gap:1.5rem;}
+  .kcon-filters{background:#0d1b2a;border-radius:12px;padding:1.3rem;border:1px solid rgba(255,255,255,0.05);}
+  .kcon-filter-title{font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;color:#f0ebe0;margin-bottom:1.2rem;}
+  .kcon-field{margin-bottom:1rem;}
+  .kcon-field-label{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(240,235,224,0.35);margin-bottom:0.4rem;}
+  .kcon-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#f0ebe0;font-family:'DM Sans',sans-serif;font-size:0.8rem;padding:0.6rem 0.85rem;outline:none;transition:border-color 0.2s;}
+  .kcon-input:focus{border-color:rgba(239,200,74,0.3);}
+  .kcon-select{width:100%;background:#0d1b2a;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#f0ebe0;font-family:'DM Sans',sans-serif;font-size:0.8rem;padding:0.6rem 0.85rem;outline:none;cursor:pointer;}
+  .kcon-search-btn{width:100%;background:var(--hy);color:#0d1b2a;border:none;border-radius:8px;padding:0.7rem;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;margin-top:0.5rem;transition:background 0.2s;}
+  .kcon-search-btn:hover{background:#f0d060;}
+  .kcon-results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+  .kcon-results-count{font-family:'DM Mono',monospace;font-size:0.65rem;color:rgba(240,235,224,0.35);}
+  .kcon-clinic-card{background:#0d1b2a;border-radius:12px;padding:1.1rem 1.3rem;border:1px solid rgba(255,255,255,0.05);margin-bottom:0.75rem;display:flex;align-items:center;gap:1rem;transition:all 0.2s;cursor:pointer;}
+  .kcon-clinic-card:hover{border-color:rgba(239,200,74,0.25);background:#112030;transform:translateX(3px);}
+  .kcon-clinic-card.selected{border-color:var(--hy);background:rgba(239,200,74,0.05);}
+  .kcon-clinic-avatar{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+  .kcon-clinic-name{font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;color:#f0ebe0;margin-bottom:0.2rem;}
+  .kcon-clinic-meta{font-size:0.72rem;color:rgba(240,235,224,0.4);}
+  .kcon-clinic-tier{font-size:0.65rem;font-weight:700;padding:0.22rem 0.65rem;border-radius:50px;}
+  .tier-platinum{background:rgba(180,180,255,0.15);color:#b4b4ff;}
+  .tier-gold{background:rgba(239,200,74,0.15);color:var(--hy);}
+  .tier-silver{background:rgba(200,200,200,0.12);color:#ccc;}
+  .kcon-clinic-rating{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--hy);}
+
+  /* ══ SIGMA DOG CARE — faithful to Figma ══ */
+  .sigma-card{background:#f0f4f0;border:1px solid #d0e0d0;}
+  .sigma-card:hover{border-color:var(--sg);}
+
+  /* Phone shell */
+  .sg-proto-wrap{background:linear-gradient(160deg,#b8d4b8 0%,#8fbc8f 100%);padding:2rem 2.5rem;display:flex;justify-content:center;}
+  .sg-device-row{display:flex;gap:20px;align-items:flex-end;justify-content:center;overflow-x:auto;padding-bottom:0.5rem;}
+  .sg-phone{width:160px;flex-shrink:0;background:#fff;border-radius:24px 24px 0 0;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,0.2);display:flex;flex-direction:column;}
+
+  /* Sigma app header (sage green bar from Figma) */
+  .sg-header{background:var(--sg);padding:10px 12px 8px;display:flex;align-items:center;justify-content:space-between;}
+  .sg-header-title{font-size:9px;font-weight:700;color:#fff;letter-spacing:0.3px;}
+  .sg-header-dog{font-size:11px;}
+  .sg-back{font-size:8px;color:rgba(255,255,255,0.8);cursor:pointer;}
+
+  /* Bottom nav (from Figma: Daycare request / View all ads / View applications) */
+  .sg-bottom-nav{background:#fff;border-top:1px solid #e0e8e0;padding:6px 0 4px;display:flex;}
+  .sg-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:2px;}
+  .sg-nav-icon{font-size:13px;}
+  .sg-nav-label{font-size:5px;font-weight:600;color:var(--sg-grey);text-align:center;line-height:1.2;}
+  .sg-nav-item.active .sg-nav-label{color:var(--sg);}
+  .sg-nav-item.active .sg-nav-icon{filter:none;}
+
+  /* Screen content */
+  .sg-screen{flex:1;background:var(--sg-bg);display:flex;flex-direction:column;overflow:hidden;min-height:260px;}
+  .sg-scroll{padding:8px;overflow-y:auto;flex:1;}
+
+  /* Sigma UI components */
+  .sg-field-label{font-size:6px;font-weight:700;color:var(--sg);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:2px;}
+  .sg-input{width:100%;background:#fff;border:1px solid #d0d8d0;border-radius:6px;padding:5px 7px;font-size:7px;color:var(--sg-text);margin-bottom:6px;box-sizing:border-box;}
+  .sg-btn{width:100%;background:var(--sg-grey);border:none;border-radius:6px;padding:6px;font-size:6.5px;font-weight:700;color:#fff;cursor:pointer;margin-top:4px;text-align:center;}
+  .sg-btn.primary{background:var(--sg);}
+  .sg-btn.outline{background:#fff;color:var(--sg-grey);border:1px solid var(--sg-grey-lt);}
+  .sg-btn.danger{background:#e57373;}
+  .sg-link{font-size:6px;color:var(--sg);text-decoration:underline;display:block;text-align:center;margin-top:4px;cursor:pointer;}
+
+  /* Ad card (from Figma style) */
+  .sg-ad-card{background:#fff;border-radius:8px;padding:8px;margin-bottom:6px;border:1px solid #e0e8e0;cursor:pointer;transition:border-color 0.15s;}
+  .sg-ad-card:hover{border-color:var(--sg);}
+  .sg-ad-title{font-size:7.5px;font-weight:700;color:var(--sg-text);margin-bottom:2px;}
+  .sg-ad-meta{font-size:6px;color:#888;margin-bottom:3px;}
+  .sg-ad-desc{font-size:6px;color:#666;line-height:1.4;margin-bottom:4px;}
+  .sg-ad-footer{display:flex;justify-content:space-between;align-items:center;}
+  .sg-applicants{font-size:5.5px;font-weight:700;color:var(--sg);}
+  .sg-badge{font-size:5px;font-weight:700;padding:1.5px 5px;border-radius:3px;}
+  .sg-badge-pending{background:#fff3cd;color:#856404;}
+  .sg-badge-accepted{background:#d4edda;color:#155724;}
+  .sg-badge-declined{background:#f8d7da;color:#721c24;}
+
+  /* Applicant card */
+  .sg-applicant{background:#fff;border-radius:8px;padding:8px;margin-bottom:6px;border:1px solid #e0e8e0;cursor:pointer;transition:border-color 0.15s;}
+  .sg-applicant:hover{border-color:var(--sg);}
+  .sg-app-row{display:flex;align-items:center;gap:5px;margin-bottom:4px;}
+  .sg-avatar{width:24px;height:24px;border-radius:50%;background:var(--sg-lt);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+  .sg-app-name{font-size:7px;font-weight:700;color:var(--sg-text);}
+  .sg-app-quote{font-size:5.5px;color:#666;font-style:italic;}
+  .sg-stars{font-size:7px;color:#f0a030;}
+
+  /* Profile */
+  .sg-profile-avatar{width:44px;height:44px;border-radius:50%;background:var(--sg-lt);display:flex;align-items:center;justify-content:center;font-size:20px;margin:6px auto 6px;}
+  .sg-profile-name{font-size:8px;font-weight:700;color:var(--sg-text);text-align:center;margin-bottom:2px;}
+  .sg-profile-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f0f0;font-size:6px;}
+  .sg-profile-key{color:#888;}
+  .sg-profile-val{color:var(--sg-text);font-weight:600;}
+  .sg-income-row{display:flex;gap:6px;margin:6px 0;}
+  .sg-income-box{flex:1;background:var(--sg-xlt);border-radius:6px;padding:6px;text-align:center;}
+  .sg-income-num{font-size:9px;font-weight:700;color:var(--sg);}
+  .sg-income-label{font-size:5px;color:#888;margin-top:1px;}
+
+  /* Error state */
+  .sg-error{background:#fde8e8;border:1px solid #e57373;border-radius:6px;padding:5px 8px;font-size:6px;color:#c62828;margin-top:4px;display:none;}
+  .sg-error.show{display:block;}
+
+  /* Slider (carer rating / distance) */
+  .sg-slider-wrap{margin-bottom:6px;}
+  .sg-slider-row{display:flex;justify-content:space-between;margin-bottom:2px;}
+  .sg-slider{width:100%;accent-color:var(--sg);height:3px;}
+
+  /* Section label inside screen */
+  .sg-screen-title{font-size:8px;font-weight:700;color:var(--sg-text);padding:8px 8px 4px;border-bottom:1px solid #e8f0e8;}
+
+  /* Tab UI (flow selector) */
+  .sg-tabs{display:flex;background:#e8f0e8;border-bottom:1px solid #d0e0d0;}
+  .sg-tab{flex:1;font-size:7px;font-weight:600;padding:7px 4px;text-align:center;color:#888;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;}
+  .sg-tab.active{color:var(--sg);border-bottom-color:var(--sg);background:#fff;}
+
+  /* Dog decoration */
+  .sg-dog-deco{font-size:20px;opacity:0.15;position:absolute;bottom:8px;right:8px;pointer-events:none;}
+
+  /* Design notes panel */
+  .sg-notes{background:#f8fbf8;border-top:1px solid #d0e0d0;padding:1.5rem 2rem;}
+  .sg-notes-title{font-size:0.78rem;font-weight:700;color:var(--green);margin-bottom:0.8rem;}
+  .sg-notes-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;}
+  .sg-note{font-size:0.78rem;color:var(--ink-dim);line-height:1.6;display:flex;gap:0.5rem;}
+  .sg-note::before{content:'•';color:var(--sg);flex-shrink:0;font-weight:700;}
+
+  /* RESUME */
+  #resume{background:var(--bg2);}
+  .resume-cols{display:grid;grid-template-columns:1fr 1fr;gap:4.5rem;}
+  .res-col-heading{font-family:'Fraunces',serif;font-style:italic;font-size:1.35rem;color:var(--green);margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--rule);}
+  .tl{display:flex;flex-direction:column;}
+  .tl-item{display:flex;gap:1.2rem;padding-bottom:2rem;}
+  .tl-left{display:flex;flex-direction:column;align-items:center;padding-top:5px;}
+  .tl-dot{width:10px;height:10px;border-radius:50%;background:var(--green-lt);border:2px solid var(--bg2);flex-shrink:0;}
+  .tl-line{width:1.5px;flex:1;background:var(--rule);margin-top:5px;min-height:20px;}
+  .tl-item:last-child .tl-line{display:none;}
+  .tl-right{flex:1;}
+  .tl-date{font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green-mid);margin-bottom:0.3rem;}
+  .tl-title{font-size:0.92rem;font-weight:600;color:var(--ink);margin-bottom:0.15rem;}
+  .tl-org{font-size:0.82rem;color:var(--ink-dim);margin-bottom:0.4rem;}
+  .tl-desc{font-size:0.82rem;color:var(--ink-faint);line-height:1.65;}
+
+  /* CONTACT */
+  #contact{background:var(--green-deep);color:var(--bg);}
+  #contact .sec-eyebrow{color:var(--green-lt);}
+  #contact .sec-eyebrow::after{background:var(--green-lt);}
+  #contact .sec-heading{color:var(--bg);}
+  #contact .sec-heading em{color:var(--green-lt);}
+  .contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;}
+  .contact-blurb{font-size:0.97rem;color:rgba(242,237,227,0.6);line-height:1.85;margin-bottom:2.5rem;font-weight:300;}
+  .c-detail{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+  .c-icon{width:38px;height:38px;border-radius:11px;background:rgba(126,196,126,0.12);border:1px solid rgba(126,196,126,0.2);display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;}
+  .c-text{font-size:0.86rem;color:rgba(242,237,227,0.6);}
+  .c-text a{color:var(--green-lt);text-decoration:none;}
+  .c-text a:hover{color:#a8e6a8;}
+  .c-socials{display:flex;gap:0.75rem;margin-top:2rem;}
+  .c-social{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.72rem;font-weight:600;padding:0.5rem 1.1rem;border-radius:50px;border:1px solid rgba(126,196,126,0.25);color:rgba(242,237,227,0.6);text-decoration:none;transition:all 0.2s;}
+  .c-social:hover{border-color:var(--green-lt);color:var(--green-lt);background:rgba(126,196,126,0.08);}
+  .cf{display:flex;flex-direction:column;gap:1rem;}
+  .fg{display:flex;flex-direction:column;gap:0.35rem;}
+  .fg label{font-size:0.62rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--green-lt);}
+  .fg input,.fg textarea{background:rgba(242,237,227,0.06);border:1px solid rgba(126,196,126,0.18);border-radius:10px;color:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:0.9rem;font-weight:300;padding:0.85rem 1rem;outline:none;transition:border-color 0.2s;resize:vertical;}
+  .fg input:focus,.fg textarea:focus{border-color:var(--green-lt);}
+  .fg input::placeholder,.fg textarea::placeholder{color:rgba(242,237,227,0.2);}
+
+  footer{background:#111d14;padding:2rem 5rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(126,196,126,0.1);}
+  footer p{font-size:0.72rem;color:rgba(242,237,227,0.2);}
+  .footer-links{display:flex;gap:1.5rem;}
+  .footer-links a{font-size:0.72rem;color:rgba(242,237,232,0.25);text-decoration:none;transition:color 0.2s;}
+  .footer-links a:hover{color:var(--green-lt);}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity 0.65s ease,transform 0.65s ease;}
+  .reveal.visible{opacity:1;transform:none;}
+  .reveal-delay{transition-delay:0.12s;}
+
+  @media(max-width:960px){
+    nav{padding:1.2rem 1.5rem;}.nav-links{display:none;}
+    #hero,section,footer{padding-left:1.5rem;padding-right:1.5rem;}
+    .hero-layout,.about-grid,.proj-grid,.resume-cols,.contact-wrap,.kdash-layout,.kcon-layout{grid-template-columns:1fr;}
+    .sg-device-row{gap:12px;}
+    .sg-phone{width:130px;}
+    .kpipe-split,.kpipe-outputs-live,.sg-notes-grid{grid-template-columns:1fr;}
+    .kc-head{padding:1.5rem 1.5rem 0;}
+    .kinetic-proto-wrap{margin:1.5rem;}
+    .mock-banner{margin:1.5rem 1.5rem 0;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-logo">Paul Lim</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#resume">Resume</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-blob blob1"></div>
+  <div class="hero-blob blob2"></div>
+  <div class="hero-layout">
+    <div>
+      <div class="hero-tag"><span class="hero-dot"></span>Available — Sydney, NSW</div>
+      <h1 class="hero-name"><span class="hn-light">Paul</span><span class="hn-dark">Lim.</span></h1>
+      <p class="hero-desc">I design systems and experiences that centre people first, bridging technology and the humans who use it.</p>
+      <div class="hero-btns">
+        <a href="#projects" class="btn-pill bpf">View My Work</a>
+        <a href="#contact" class="btn-pill bpo">Say Hello</a>
+      </div>
+      <div class="hero-socials">
+        <a href="https://www.linkedin.com/in/paullim02" target="_blank" class="social-pill"><span style="font-weight:700;font-size:0.85rem;">in</span> LinkedIn</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-label">Quick Info</div>
+      <p class="hc-bio">Commerce student · BIS Major · Former Retail Manager · Figma designer · Sydney based.</p>
+      <div class="hc-row"><div class="hc-icon">🎓</div><div class="hc-text"><strong>Macquarie University</strong><br>B. Commerce — BIS, 2025</div></div>
+      <div class="hc-row"><div class="hc-icon">📍</div><div class="hc-text"><strong>Sydney</strong></div></div>
+      <div class="hc-row"><div class="hc-icon">🌐</div><div class="hc-text"><strong>English</strong> + Korean</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="sec-eyebrow reveal">About Me</p>
+  <h2 class="sec-heading reveal">A Little About <em>Me</em></h2>
+  <div class="about-grid">
+    <div class="about-body reveal">
+      <p>I'm a 23 year old Commerce student at Macquarie University, majoring in Business Information Systems. My studies focus on designing technology solutions that fit how <strong>real people work and think</strong>.</p>
+      <p>Beyond uni, I've built years of real world leadership in retail growing from crew member to <strong>Assistant Store Manager at Hype DC</strong>. I've managed teams, handled end to end operations, and navigated everything from stock investigations to area manager reporting.</p>
+      <p>I care about the human side of technology. Whether it's a store floor or a mobile app, I'm drawn to making experiences <strong>smooth, clear, and genuinely useful</strong>.</p>
+      <div class="skills-wrap">
+        <span class="sk">Product Thinking</span><span class="sk">Team Leadership</span><span class="sk">Retail Operations</span>
+        <span class="sk">User Research</span><span class="sk">Systems Analysis</span><span class="sk">Prototyping</span>
+      </div>
+    </div>
+    <div class="about-aside reveal reveal-delay">
+      <div class="aside-card"><div class="ac-label">Education</div><div class="ac-val">B. Commerce — BIS</div><div class="ac-sub">Macquarie University, 2025</div></div>
+      <div class="aside-card"><div class="ac-label">Location</div><div class="ac-val">Sydney</div></div>
+      <div class="aside-card"><div class="ac-label">Languages</div><div class="ac-val">English + Korean</div></div>
+      <div class="aside-card"><div class="ac-label">Find Me Online</div><div style="margin-top:0.4rem;"><a href="https://www.linkedin.com/in/paullim02" target="_blank" class="social-pill" style="font-size:0.68rem;padding:0.35rem 0.85rem;display:inline-flex;"><span style="font-weight:700;">in</span> LinkedIn</a></div></div>
+      <div class="aside-card"><div class="ac-label">Contact</div><div class="ac-val" style="font-size:0.82rem"><a href="mailto:paul12apersonall@gmail.com" style="color:var(--green);text-decoration:none">paul12apersonall@gmail.com</a></div><div class="ac-sub">0452 440 826</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="sec-eyebrow reveal">Work & Projects</p>
+  <h2 class="sec-heading reveal">Selected <em>Work</em></h2>
+  <div class="proj-grid">
+
+    <!-- ══ KINETIC ══ -->
+    <div class="pcard kinetic-card reveal">
+      <div class="kc-head">
+        <div>
+          <div class="kc-badge">✦ Heidi Health — Junior Product Program</div>
+          <div class="kc-title">Kinetic</div>
+          <div class="kc-subtitle">Data-Sharing Incentive System · Physiotherapy Networks</div>
+        </div>
+        <div>
+          <div class="kc-meta-row"><strong>Type</strong> — Mock Product Brief</div>
+          <div class="kc-meta-row"><strong>Tools</strong> — Figma, HTML Prototype</div>
+          <div class="kc-meta-row"><strong>Year</strong> — 2025</div>
+        </div>
+      </div>
+      <div class="mock-banner">
+        <span style="font-size:1rem;">📋</span>
+        <div class="mock-banner-text"><strong>Mock Project</strong> — Kinetic was created as a speculative application task for Heidi Health's Junior Product Program. It is not a live product. All data, clinic names, and figures are fictional and for demonstration only.</div>
+      </div>
+      <!-- Real prototype tabs — iframes load the actual HTML files -->
+      <div style="margin:2rem 2.5rem;border-radius:16px;overflow:hidden;border:1px solid rgba(239,200,74,0.15);background:#0a1520;">
+        <!-- Tab bar -->
+        <div style="display:flex;background:#0d1b2a;border-bottom:1px solid rgba(239,200,74,0.12);overflow-x:auto;">
+          <button class="kreal-tab active" onclick="kRealSwitch('dashboard',this)" style="font-family:'DM Sans',sans-serif;font-size:0.72rem;font-weight:600;padding:0.9rem 1.4rem;color:#EFC84A;border:none;border-bottom:2px solid #EFC84A;background:transparent;cursor:pointer;white-space:nowrap;">📊 Clinic Dashboard</button>
+          <button class="kreal-tab" onclick="kRealSwitch('dataflow',this)" style="font-family:'DM Sans',sans-serif;font-size:0.72rem;font-weight:600;padding:0.9rem 1.4rem;color:rgba(240,235,224,0.4);border:none;border-bottom:2px solid transparent;background:transparent;cursor:pointer;white-space:nowrap;">⚡ Data Flow</button>
+          <button class="kreal-tab" onclick="kRealSwitch('connect',this)" style="font-family:'DM Sans',sans-serif;font-size:0.72rem;font-weight:600;padding:0.9rem 1.4rem;color:rgba(240,235,224,0.4);border:none;border-bottom:2px solid transparent;background:transparent;cursor:pointer;white-space:nowrap;">🔗 Kinetic Connect</button>
+        </div>
+        <!-- iframes — real prototypes, pixel-perfect -->
+        <div id="kreal-dashboard" class="kreal-panel" style="display:block;">
+          <iframe src="heidi-kinetic-dashboard-v2.html" style="width:100%;height:680px;border:none;display:block;" scrolling="yes" title="Kinetic Clinic Dashboard"></iframe>
+        </div>
+        <div id="kreal-dataflow" class="kreal-panel" style="display:none;">
+          <iframe src="heidi-data-flow.html" style="width:100%;height:680px;border:none;display:block;" scrolling="yes" title="Kinetic Data Flow"></iframe>
+        </div>
+        <div id="kreal-connect" class="kreal-panel" style="display:none;">
+          <iframe src="heidi-kinetic-connect-v3.html" style="width:100%;height:680px;border:none;display:block;" scrolling="yes" title="Kinetic Connect"></iframe>
+        </div>
+      </div>
+      <div style="padding:0 2.5rem 2.5rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-top:0.5rem;">
+        <div>
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(239,200,74,0.6);margin-bottom:0.8rem;">The Problem</div>
+          <p style="font-size:0.87rem;color:rgba(240,235,224,0.55);line-height:1.85;font-weight:300;margin-bottom:0.9rem;">Most clinics want to <em>receive</em> shared patient records but won't share their own. Kinetic's thesis: adoption only works when sharing is the <strong style="color:rgba(240,235,224,0.88);">rational self-interested choice</strong>, not a prosocial one.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:1.2rem;"><span style="font-size:0.65rem;font-weight:600;padding:0.28rem 0.75rem;border-radius:50px;background:rgba(239,200,74,0.09);color:rgba(239,200,74,0.75);border:1px solid rgba(239,200,74,0.2);">Product Design</span><span style="font-size:0.65rem;font-weight:600;padding:0.28rem 0.75rem;border-radius:50px;background:rgba(239,200,74,0.09);color:rgba(239,200,74,0.75);border:1px solid rgba(239,200,74,0.2);">Incentive Design</span><span style="font-size:0.65rem;font-weight:600;padding:0.28rem 0.75rem;border-radius:50px;background:rgba(239,200,74,0.09);color:rgba(239,200,74,0.75);border:1px solid rgba(239,200,74,0.2);">Game Theory</span><span style="font-size:0.65rem;font-weight:600;padding:0.28rem 0.75rem;border-radius:50px;background:rgba(239,200,74,0.09);color:rgba(239,200,74,0.75);border:1px solid rgba(239,200,74,0.2);">Figma</span></div>
+        </div>
+        <div>
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(239,200,74,0.6);margin-bottom:0.8rem;">Design Pillars</div>
+          <div style="display:flex;flex-direction:column;gap:0.65rem;">
+            <div style="background:rgba(239,200,74,0.05);border:1px solid rgba(239,200,74,0.13);border-radius:10px;padding:0.85rem 1rem;"><div style="font-size:0.8rem;font-weight:600;color:rgba(240,235,224,0.82);margin-bottom:0.2rem;">🏆 Contribution Scoring & Tier Access</div><div style="font-size:0.74rem;color:rgba(240,235,224,0.38);line-height:1.5;">Share more → earn higher access. Bronze through Platinum.</div></div>
+            <div style="background:rgba(239,200,74,0.05);border:1px solid rgba(239,200,74,0.13);border-radius:10px;padding:0.85rem 1rem;"><div style="font-size:0.8rem;font-weight:600;color:rgba(240,235,224,0.82);margin-bottom:0.2rem;">⚡ Dual Data Pipeline</div><div style="font-size:0.74rem;color:rgba(240,235,224,0.38);line-height:1.5;">One action → two outputs. Zero extra work for clinicians.</div></div>
+            <div style="background:rgba(239,200,74,0.05);border:1px solid rgba(239,200,74,0.13);border-radius:10px;padding:0.85rem 1rem;"><div style="font-size:0.8rem;font-weight:600;color:rgba(240,235,224,0.82);margin-bottom:0.2rem;">🔗 Kinetic Connect</div><div style="font-size:0.74rem;color:rgba(240,235,224,0.38);line-height:1.5;">Patient-facing clinic discovery — high contributors surface first.</div></div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /kinetic -->
+
+    <!-- ══ SIGMA DOG CARE ══ -->
+    <div class="pcard wide reveal" style="background:#1a2418;border:1px solid rgba(106,158,106,0.25);">
+
+      <!-- Tab bar — same style as Kinetic -->
+      <div style="display:flex;background:#141e12;border-bottom:1px solid rgba(106,158,106,0.2);overflow-x:auto;">
+        <button onclick="sgSwitch('owner',this)" id="sgtab-owner" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.3px;padding:0.9rem 1.5rem;color:#6a9e6a;border:none;border-bottom:2px solid #6a9e6a;background:transparent;cursor:pointer;white-space:nowrap;">🐾 Owner Flow</button>
+        <button onclick="sgSwitch('carer',this)" id="sgtab-carer" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.3px;padding:0.9rem 1.5rem;color:rgba(255,255,255,0.3);border:none;border-bottom:2px solid transparent;background:transparent;cursor:pointer;white-space:nowrap;">🤝 Carer Flow</button>
+        <button onclick="sgSwitch('errors',this)" id="sgtab-errors" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.3px;padding:0.9rem 1.5rem;color:rgba(255,255,255,0.3);border:none;border-bottom:2px solid transparent;background:transparent;cursor:pointer;white-space:nowrap;">⚠️ Error States</button>
+      </div>
+
+      <!-- ── OWNER FLOW ── -->
+      <div id="sgp-owner" style="padding:2rem 2.5rem;display:flex;gap:16px;align-items:flex-end;overflow-x:auto;">
+
+        <!-- Screen: Login -->
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Login</div>
+          <div style="width:150px;background:#fff;border-radius:20px 20px 0 0;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,0.4);">
+            <div style="background:#6a9e6a;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:8.5px;font-weight:700;color:#fff;">Sigma Dog Care</span><span style="font-size:12px;">🐕</span></div>
+            <div style="padding:12px;">
+              <div style="text-align:center;font-size:7.5px;color:#555;margin-bottom:10px;line-height:1.5;">Welcome to Sigma Dog Care<br>Sign in with a valid One ID.</div>
+              <div style="font-size:6px;font-weight:700;color:#6a9e6a;text-transform:uppercase;margin-bottom:2px;">Student ID / One ID</div>
+              <div style="background:#f5f5f5;border:1px solid #e0e0e0;border-radius:5px;padding:5px 7px;font-size:7px;color:#333;margin-bottom:6px;">47275623</div>
+              <div style="font-size:6px;font-weight:700;color:#6a9e6a;text-transform:uppercase;margin-bottom:2px;">Password</div>
+              <div style="background:#f5f5f5;border:1px solid #e0e0e0;border-radius:5px;padding:5px 7px;font-size:7px;color:#333;margin-bottom:7px;">•••••••</div>
+              <div style="display:flex;align-items:center;gap:4px;margin-bottom:8px;"><div style="width:8px;height:8px;border-radius:2px;background:#d2ebd2;border:1px solid #6a9e6a;"></div><span style="font-size:6px;color:#888;">Remember me</span></div>
+              <div style="background:#9e9e9e;border-radius:5px;padding:6px;text-align:center;font-size:7px;font-weight:700;color:#fff;margin-bottom:6px;">SIGN IN</div>
+              <div style="text-align:center;font-size:6px;color:#6a9e6a;text-decoration:underline;">Forgot your password?</div>
+              <div style="display:flex;gap:5px;margin-top:7px;">
+                <div style="flex:1;background:#f0f0f0;border-radius:4px;padding:4px;text-align:center;font-size:5.5px;color:#666;border:1px solid #e0e0e0;">Owner login</div>
+                <div style="flex:1;background:#f0f0f0;border-radius:4px;padding:4px;text-align:center;font-size:5.5px;color:#666;border:1px solid #e0e0e0;">Carer login</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen: Your Ads -->
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Your Ads</div>
+          <div style="width:150px;background:#fff;border-radius:20px 20px 0 0;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,0.4);">
+            <div style="background:#6a9e6a;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:8.5px;font-weight:700;color:#fff;">Sigma Dog Care</span><span style="font-size:12px;">🐕</span></div>
+            <div style="padding:9px;">
+              <div style="font-size:7.5px;font-weight:700;color:#2a2a2a;margin-bottom:7px;">Your Ads</div>
+              <div style="background:#f8f8f8;border-radius:7px;padding:7px;margin-bottom:5px;border:1px solid #e8f0e8;"><div style="font-size:7px;font-weight:700;color:#2a2a2a;">🐢 Turtle's Weekend Out</div><div style="font-size:6px;color:#888;margin-top:2px;">27–30 May · 2 applicants</div></div>
+              <div style="background:#f8f8f8;border-radius:7px;padding:7px;margin-bottom:5px;border:1px solid #e8f0e8;"><div style="font-size:7px;font-weight:700;color:#2a2a2a;">🐕 Eren needs a buddy</div><div style="font-size:6px;color:#888;margin-top:2px;">10–17 May · 0 applicants</div></div>
+              <div style="background:#f8f8f8;border-radius:7px;padding:7px;border:1px solid #e8f0e8;"><div style="font-size:7px;font-weight:700;color:#2a2a2a;">🐶 Freddy!</div><div style="font-size:6px;color:#888;margin-top:2px;">1–5 May · 1 applicant</div></div>
+            </div>
+            <div style="background:#fff;border-top:1px solid #e8f0e8;padding:6px 0 4px;display:flex;">
+              <div style="flex:1;text-align:center;"><div style="font-size:12px;">🐾</div><div style="font-size:5px;color:#6a9e6a;font-weight:600;">Daycare<br>Request</div></div>
+              <div style="flex:1;text-align:center;"><div style="font-size:12px;">📋</div><div style="font-size:5px;color:#9e9e9e;">View all<br>Ads</div></div>
+              <div style="flex:1;text-align:center;"><div style="font-size:12px;">📥</div><div style="font-size:5px;color:#9e9e9e;">Applications</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen: Create Ad -->
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Create Ad</div>
+          <div style="width:150px;background:#fff;border-radius:20px 20px 0 0;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,0.4);">
+            <div style="background:#6a9e6a;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:8.5px;font-weight:700;color:#fff;">Create an Ad</span><span style="font-size:12px;">🐕</span></div>
+            <div style="padding:9px;">
+              <div style="font-size:6px;font-weight:700;color:#6a9e6a;text-transform:uppercase;margin-bottom:2px;">Title of Ad</div>
+              <div style="background:#fff3cd;border:1px solid #ffe08a;border-radius:5px;padding:5px 7px;font-size:7px;color:#333;margin-bottom:5px;">Turtle's Weekend out</div>
+              <div style="font-size:6px;font-weight:700;color:#6a9e6a;text-transform:uppercase;margin-bottom:2px;">Date Duration</div>
+              <div style="background:#f5f5f5;border:1px solid #e0e0e0;border-radius:5px;padding:5px 7px;font-size:6.5px;color:#333;margin-bottom:5px;">2025/05/27–2025/05/30</div>
+              <div style="font-size:6px;font-weight:700;color:#6a9e6a;text-transform:uppercase;margin-bottom:2px;">Dog Size</div>
+              <div style="background:#f5f5f5;border:1px solid #e0e0e0;border-radius:5px;padding:5px 7px;font-size:7px;color:#333;margin-bottom:5px;">Medium</div>
+              <div style="font-size:6px;font-weight:700;color:#6a9e6a;text-transform:uppercase;margin-bottom:2px;">Location</div>
+              <div style="background:#f5f5f5;border:1px solid #e0e0e0;border-radius:5px;padding:5px 7px;font-size:7px;color:#333;margin-bottom:5px;">Summer Hill</div>
+              <div style="font-size:6px;font-weight:700;color:#6a9e6a;margin-bottom:2px;">Distance of Carer (KM)</div>
+              <div style="display:flex;justify-content:space-between;font-size:5px;color:#aaa;margin-bottom:3px;"><span>0</span><span>50</span><span>100</span></div>
+              <div style="height:3px;background:#e0e0e0;border-radius:2px;margin-bottom:7px;"><div style="width:50%;height:100%;background:#6a9e6a;border-radius:2px;"></div></div>
+              <div style="background:#9e9e9e;border-radius:5px;padding:6px;text-align:center;font-size:7px;font-weight:700;color:#fff;">Create Ad</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen: Applicants -->
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Applicants</div>
+          <div style="width:150px;background:#fff;border-radius:20px 20px 0 0;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,0.4);">
+            <div style="background:#6a9e6a;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:8.5px;font-weight:700;color:#fff;">Applicants</span><span style="font-size:12px;">🐕</span></div>
+            <div style="padding:9px;">
+              <div style="font-size:7px;font-weight:700;color:#2a2a2a;margin-bottom:7px;">Turtle's Weekend Out</div>
+              <div style="background:#f8f8f8;border-radius:7px;padding:7px;margin-bottom:5px;display:flex;align-items:center;gap:6px;">
+                <div style="width:24px;height:24px;border-radius:50%;background:#d2ebd2;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">👤</div>
+                <div><div style="font-size:7px;font-weight:700;color:#2a2a2a;">Sergio Paula</div><div style="font-size:6px;color:#f0a030;">★★★★★</div><div style="font-size:5.5px;color:#666;font-style:italic;">"Im interested staffie!!"</div></div>
+              </div>
+              <div style="background:#f8f8f8;border-radius:7px;padding:7px;margin-bottom:7px;display:flex;align-items:center;gap:6px;">
+                <div style="width:24px;height:24px;border-radius:50%;background:#d2ebd2;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;">👤</div>
+                <div><div style="font-size:7px;font-weight:700;color:#2a2a2a;">Lisa Simpson</div><div style="font-size:6px;color:#f0a030;">★★★★☆</div><div style="font-size:5.5px;color:#666;font-style:italic;">"SO Cute!"</div></div>
+              </div>
+              <div style="background:#9e9e9e;border-radius:5px;padding:5px;text-align:center;font-size:6.5px;font-weight:700;color:#fff;">Confirm for Turtle's Weekend Out</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen: Confirmed -->
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Confirmed</div>
+          <div style="width:150px;background:#fff;border-radius:20px 20px 0 0;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,0.4);">
+            <div style="background:#6a9e6a;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:8.5px;font-weight:700;color:#fff;">Booking</span><span style="font-size:12px;">🐕</span></div>
+            <div style="padding:14px;text-align:center;">
+              <div style="font-size:26px;margin-bottom:8px;">✅</div>
+              <div style="font-size:8px;font-weight:700;color:#2d5a2d;margin-bottom:5px;">Confirmed!</div>
+              <div style="font-size:6.5px;color:#555;line-height:1.6;">Sergio Paula confirmed<br>for Turtle's Weekend Out<br>27–30 May · Summer Hill</div>
+              <div style="background:#6a9e6a;border-radius:5px;padding:6px;text-align:center;font-size:6.5px;font-weight:700;color:#fff;margin-top:10px;">Back to Your Ads</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /owner -->
+
+      <!-- ── CARER FLOW ── -->
+      <div id="sgp-carer" style="padding:2rem 2.5rem;display:none;flex-direction:row;gap:16px;align-items:flex-end;overflow-x:auto;">
+
+        <!-- Screen: Search Ads -->
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Search Ads</div>
+          <div style="width:150px;background:#fff;border-radius:20px 20px 0 0;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,0.4);">
+            <div style="background:#6a9e6a;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:8.5px;font-weight:700;color:#fff;">Search Ads</span><span style="font-size:12px;">🐕</span></div>
+            <div style="padding:9px;">
+              <div style="font-size:6px;font-weight:700;color:#6a9e6a;text-transform:uppercase;margin-bottom:2px;">Date Range</div>
+              <div style="background:#f5f5f5;border:1px solid #e0e0e0;border-radius:5px;padding:5px 7px;font-size:6.5px;color:#333;margin-bottom:5px;">2025/05/27–05/30</div>
+              <div style="font-size:6px;font-weight:700;color:#6a9e6a;text-transform:uppercase;margin-bottom:2px;">Dog Size</div>
+              <div style="background:#f5f5f5;border:1px solid #e0e0e0;border-radius:5px;padding:5px 7px;font-size:7px;color:#333;margin-bottom:5px;">Medium</div>
+              <div style="font-size:6px;font-weight:700;color:#6a9e6a;text-transform:uppercase;margin-bottom:2px;">Location</div>
+              <div style="background:#f5f5f5;border:1px solid #e0e0e0;border-radius:5px;padding:5px 7px;font-size:7px;color:#333;margin-bottom:5px;">Sydney City</div>
+              <div style="font-size:6px;font-weight:700;color:#6a9e6a;margin-bottom:2px;">Carer Rating</div>
+              <div style="height:3px;background:#e0e0e0;border-radius:2px;margin-bottom:7px;"><div style="width:70%;height:100%;background:#9e9e9e;border-radius:2px;"></div></div>
+              <div style="background:#9e9e9e;border-radius:5px;padding:6px;text-align:center;font-size:7px;font-weight:700;color:#fff;">Search</div>
+            </div>
+            <div style="background:#fff;border-top:1px solid #e8f0e8;padding:6px 0 4px;display:flex;">
+              <div style="flex:1;text-align:center;"><div style="font-size:12px;">🔍</div><div style="font-size:5px;color:#6a9e6a;font-weight:600;">Search Ads</div></div>
+              <div style="flex:1;text-align:center;"><div style="font-size:12px;">📥</div><div style="font-size:5px;color:#9e9e9e;">Applications</div></div>
+              <div style="flex:1;text-align:center;"><div style="font-size:12px;">👤</div><div style="font-size:5px;color:#9e9e9e;">Profile</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen: Ad Detail / Apply -->
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Ad Detail</div>
+          <div style="width:150px;background:#fff;border-radius:20px 20px 0 0;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,0.4);">
+            <div style="background:#6a9e6a;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:8px;font-weight:700;color:#fff;">Turtle's Weekend Out</span><span style="font-size:12px;">🐕</span></div>
+            <div style="padding:9px;">
+              <div style="font-size:7px;font-weight:700;color:#2a2a2a;margin-bottom:7px;">🐢 Turtle's Weekend Out</div>
+              <div style="border-bottom:1px solid #f0f0f0;padding-bottom:4px;margin-bottom:4px;display:flex;justify-content:space-between;font-size:6.5px;"><span style="color:#888;">Dog size:</span><span style="font-weight:600;">Medium</span></div>
+              <div style="border-bottom:1px solid #f0f0f0;padding-bottom:4px;margin-bottom:4px;display:flex;justify-content:space-between;font-size:6.5px;"><span style="color:#888;">Location:</span><span style="font-weight:600;">Summer Hill</span></div>
+              <div style="border-bottom:1px solid #f0f0f0;padding-bottom:4px;margin-bottom:4px;display:flex;justify-content:space-between;font-size:6.5px;"><span style="color:#888;">Pay:</span><span style="font-weight:600;">$30 P/H</span></div>
+              <div style="border-bottom:1px solid #f0f0f0;padding-bottom:4px;margin-bottom:7px;display:flex;justify-content:space-between;font-size:6.5px;"><span style="color:#888;">Dates:</span><span style="font-weight:600;">27–30 May</span></div>
+              <div style="font-size:6px;font-weight:700;color:#6a9e6a;margin-bottom:2px;">Distance of Carer (KM)</div>
+              <div style="height:3px;background:#e0e0e0;border-radius:2px;margin-bottom:7px;"><div style="width:50%;height:100%;background:#6a9e6a;border-radius:2px;"></div></div>
+              <div style="background:#9e9e9e;border-radius:5px;padding:6px;text-align:center;font-size:7px;font-weight:700;color:#fff;">Apply</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen: My Applications -->
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">My Applications</div>
+          <div style="width:150px;background:#fff;border-radius:20px 20px 0 0;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,0.4);">
+            <div style="background:#6a9e6a;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:8.5px;font-weight:700;color:#fff;">Applications</span><span style="font-size:12px;">🐕</span></div>
+            <div style="padding:9px;">
+              <div style="background:#f8f8f8;border-radius:7px;padding:7px;margin-bottom:5px;border:1px solid #e8f0e8;">
+                <div style="font-size:7px;font-weight:700;color:#2a2a2a;">Turtle's Weekend Out</div>
+                <div style="font-size:6px;color:#888;margin-top:2px;">27–30 May</div>
+                <div style="display:inline-block;background:#fff3cd;border:1px solid #ffe08a;border-radius:3px;padding:2px 6px;font-size:5.5px;font-weight:700;color:#856404;margin-top:3px;">PENDING</div>
+              </div>
+              <div style="background:#f8f8f8;border-radius:7px;padding:7px;border:1px solid #e8f0e8;">
+                <div style="font-size:7px;font-weight:700;color:#2a2a2a;">Freddy!</div>
+                <div style="font-size:6px;color:#888;margin-top:2px;">1–5 May</div>
+                <div style="display:inline-block;background:#d4edda;border:1px solid #c3e6cb;border-radius:3px;padding:2px 6px;font-size:5.5px;font-weight:700;color:#155724;margin-top:3px;">ACCEPTED</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen: Carer Profile -->
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Profile</div>
+          <div style="width:150px;background:#fff;border-radius:20px 20px 0 0;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,0.4);">
+            <div style="background:#6a9e6a;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:8.5px;font-weight:700;color:#fff;">Profile</span><span style="font-size:12px;">🐕</span></div>
+            <div style="padding:9px;">
+              <div style="width:40px;height:40px;border-radius:50%;background:#d2ebd2;display:flex;align-items:center;justify-content:center;font-size:18px;margin:0 auto 6px;">👤</div>
+              <div style="text-align:center;font-size:8px;font-weight:700;color:#2a2a2a;margin-bottom:2px;">Sergio Paula</div>
+              <div style="text-align:center;font-size:8px;color:#f0a030;margin-bottom:7px;">★★★★★</div>
+              <div style="border-bottom:1px solid #f0f0f0;padding-bottom:3px;margin-bottom:3px;display:flex;justify-content:space-between;font-size:6.5px;"><span style="color:#888;">Tel:</span><span style="font-weight:600;">0452 331 245</span></div>
+              <div style="border-bottom:1px solid #f0f0f0;padding-bottom:3px;margin-bottom:3px;display:flex;justify-content:space-between;font-size:6.5px;"><span style="color:#888;">Address:</span><span style="font-weight:600;">Summer Hill</span></div>
+              <div style="border-bottom:1px solid #f0f0f0;padding-bottom:4px;margin-bottom:6px;font-size:6.5px;color:#666;font-style:italic;">"Only here for the staffies :P"</div>
+              <div style="display:flex;gap:5px;">
+                <div style="flex:1;background:#e8f3e8;border-radius:5px;padding:6px;text-align:center;"><div style="font-size:9px;font-weight:700;color:#6a9e6a;">$1,500</div><div style="font-size:5px;color:#888;margin-top:1px;">Earned</div></div>
+                <div style="flex:1;background:#f5f5f5;border-radius:5px;padding:6px;text-align:center;"><div style="font-size:9px;font-weight:700;color:#9e9e9e;">$500</div><div style="font-size:5px;color:#888;margin-top:1px;">Pending</div></div>
+              </div>
+            </div>
+            <div style="background:#fff;border-top:1px solid #e8f0e8;padding:6px 0 4px;display:flex;">
+              <div style="flex:1;text-align:center;"><div style="font-size:12px;">🔍</div><div style="font-size:5px;color:#9e9e9e;">Search</div></div>
+              <div style="flex:1;text-align:center;"><div style="font-size:12px;">📥</div><div style="font-size:5px;color:#9e9e9e;">Applications</div></div>
+              <div style="flex:1;text-align:center;"><div style="font-size:12px;">👤</div><div style="font-size:5px;color:#6a9e6a;font-weight:600;">Profile</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /carer -->
+
+      <!-- ── ERROR STATES ── -->
+      <div id="sgp-errors" style="padding:2rem 2.5rem;display:none;flex-direction:row;gap:16px;align-items:flex-start;overflow-x:auto;flex-wrap:wrap;">
+
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Owner — Invalid Date</div>
+          <div style="width:150px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.35);padding:10px;">
+            <div style="font-size:6.5px;font-weight:700;color:#6a9e6a;text-transform:uppercase;margin-bottom:3px;">Date Duration</div>
+            <div style="background:#f5f5f5;border:1.5px solid #e57373;border-radius:5px;padding:5px 7px;font-size:6.5px;color:#333;margin-bottom:4px;">2025/05/17–2025/05/10</div>
+            <div style="background:#fde8e8;border:1px solid #e57373;border-radius:5px;padding:5px 7px;font-size:6.5px;color:#c62828;line-height:1.4;">Error: End date must be later than start date</div>
+          </div>
+        </div>
+
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Incorrect Password</div>
+          <div style="width:150px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.35);padding:10px;">
+            <div style="font-size:6.5px;font-weight:700;color:#6a9e6a;text-transform:uppercase;margin-bottom:3px;">Password</div>
+            <div style="background:#f5f5f5;border:1.5px solid #e57373;border-radius:5px;padding:5px 7px;font-size:6.5px;color:#333;margin-bottom:4px;">•••••</div>
+            <div style="background:#fde8e8;border:1px solid #e57373;border-radius:5px;padding:5px 7px;font-size:6.5px;color:#c62828;">Error: Incorrect or missing password</div>
+          </div>
+        </div>
+
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Network Error</div>
+          <div style="width:150px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.35);padding:10px;">
+            <div style="background:#fde8e8;border:1px solid #e57373;border-radius:5px;padding:6px 7px;font-size:6.5px;color:#c62828;line-height:1.5;">ERROR: Unable to load applications.<br>Check your internet connection</div>
+          </div>
+        </div>
+
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Rating Too Low</div>
+          <div style="width:150px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.35);padding:10px;">
+            <div style="background:#fde8e8;border:1px solid #e57373;border-radius:5px;padding:5px 7px;font-size:6.5px;color:#c62828;margin-bottom:5px;">Error: your rating is too low</div>
+            <div style="display:flex;justify-content:space-between;font-size:6.5px;margin-bottom:3px;"><span style="color:#888;">Your rating:</span><span style="color:#f0a030;">★★★☆☆</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:6.5px;"><span style="color:#888;">Required:</span><span style="color:#f0a030;">★★★★★</span></div>
+          </div>
+        </div>
+
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="font-size:0.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.25);">Invalid Bio</div>
+          <div style="width:150px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.35);padding:10px;">
+            <div style="font-size:6.5px;font-weight:700;color:#6a9e6a;text-transform:uppercase;margin-bottom:3px;">Bio</div>
+            <div style="background:#f5f5f5;border:1.5px solid #e57373;border-radius:5px;padding:5px 7px;font-size:6.5px;color:#333;margin-bottom:4px;">Only here for the staffies 🐕🔥</div>
+            <div style="background:#fde8e8;border:1px solid #e57373;border-radius:5px;padding:5px 7px;font-size:6.5px;color:#c62828;line-height:1.4;">Error: Bio' does not allow Emoticons</div>
+          </div>
+        </div>
+
+      </div><!-- /errors -->
+
+      <!-- Design notes -->
+      <div style="border-top:1px solid rgba(106,158,106,0.2);padding:1.5rem 2.5rem;">
+        <div style="font-size:0.62rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(106,158,106,0.6);margin-bottom:0.8rem;">Design Philosophy</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+          <div style="font-size:0.78rem;color:rgba(255,255,255,0.4);line-height:1.65;display:flex;gap:0.5rem;"><span style="color:#6a9e6a;flex-shrink:0;">•</span>Simplified the UI especially in high-traffic areas like dashboards — when interacting constantly you don't want a jumble of words.</div>
+          <div style="font-size:0.78rem;color:rgba(255,255,255,0.4);line-height:1.65;display:flex;gap:0.5rem;"><span style="color:#6a9e6a;flex-shrink:0;">•</span>Added quick-view icons on dashboards & key areas to allow users to glimpse key info without committing much.</div>
+          <div style="font-size:0.78rem;color:rgba(255,255,255,0.4);line-height:1.65;display:flex;gap:0.5rem;"><span style="color:#6a9e6a;flex-shrink:0;">•</span>Colour scheme of sage green & muted grey — sage green is inviting & reflects the friendly service. Muted grey highlights interactive elements without adding too much colour.</div>
+          <div style="font-size:0.78rem;color:rgba(255,255,255,0.4);line-height:1.65;display:flex;gap:0.5rem;"><span style="color:#6a9e6a;flex-shrink:0;">•</span>Little cartoon dogs scattered throughout to emphasise the system's friendly & carefree vibe. Making key information very visible was key.</div>
+        </div>
+      </div>
+
+      <!-- Card footer -->
+      <div class="pcard-body" style="padding-top:1.5rem;border-top:1px solid rgba(106,158,106,0.15);">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+          <div style="width:46px;height:46px;border-radius:13px;background:rgba(106,158,106,0.15);display:flex;align-items:center;justify-content:center;font-size:1.35rem;">🐕</div>
+          <div style="display:inline-flex;align-items:center;gap:0.4rem;background:rgba(106,158,106,0.1);border:1px solid rgba(106,158,106,0.25);border-radius:50px;padding:0.25rem 0.8rem;font-size:0.65rem;font-weight:700;color:#6a9e6a;">📋 Mock University Project</div>
+        </div>
+        <div class="pcard-title" style="color:#f0ebe0;">Sigma Dog Care</div>
+        <div class="pcard-sub" style="color:rgba(106,158,106,0.7);">COMP2750 — University Project · Figma Prototype</div>
+        <p class="pcard-desc" style="color:rgba(240,235,224,0.55);">A mobile UI/UX system designed for COMP2750 at Macquarie University. Sigma Dog Care connects dog owners with local carers for short-term daycare. The prototype covers both the owner flow (create ad, manage applicants, confirm a carer) and the carer flow (search ads, apply, manage profile & income) — plus full error state coverage. All screens, interactions, and user flows were designed in Figma.</p>
+        <div class="pcard-tags">
+          <span class="ptag" style="background:rgba(106,158,106,0.1);color:#6a9e6a;border-color:rgba(106,158,106,0.25);">Figma</span>
+          <span class="ptag" style="background:rgba(106,158,106,0.1);color:#6a9e6a;border-color:rgba(106,158,106,0.25);">UI/UX Design</span>
+          <span class="ptag" style="background:rgba(106,158,106,0.1);color:#6a9e6a;border-color:rgba(106,158,106,0.25);">Mobile Prototype</span>
+          <span class="ptag" style="background:rgba(106,158,106,0.1);color:#6a9e6a;border-color:rgba(106,158,106,0.25);">User Flows</span>
+          <span class="ptag" style="background:rgba(106,158,106,0.1);color:#6a9e6a;border-color:rgba(106,158,106,0.25);">Error States</span>
+          <span class="ptag" style="background:rgba(106,158,106,0.1);color:#6a9e6a;border-color:rgba(106,158,106,0.25);">Information Architecture</span>
+        </div>
+      </div>
+    </div><!-- /sigma -->
+
+  </div>
+</section>
+
+<!-- RESUME -->
+<section id="resume">
+  <p class="sec-eyebrow reveal">Resume</p>
+  <h2 class="sec-heading reveal">Experience &amp; <em>Education</em></h2>
+  <div class="resume-cols">
+    <div class="reveal">
+      <div class="res-col-heading">Work Experience</div>
+      <div class="tl">
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-date">Oct 2022 — Present</div><div class="tl-title">Sales Assistant (Senior) → Asst. Store Manager</div><div class="tl-org">Hype DC — QVB & Mid City, Sydney</div><div class="tl-desc">Rostering, weekly banking, KPI reporting to Area Manager, Zendesk operations, stock investigations, cash procedures, and store open/close.</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-date">Jan – Apr 2021</div><div class="tl-title">Shift Supervisor (Manager)</div><div class="tl-org">KFC</div><div class="tl-desc">Led shifts of 5–6 team members. Cash, stock ordering, situational defusal, and 20+ hours of module training.</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-date">Dec 2019 – Apr 2021</div><div class="tl-title">Food Service Worker & Cook</div><div class="tl-org">KFC</div><div class="tl-desc">Customer service, food prep, hygiene protocol, stock management. Awarded Team Member of the Month.</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-date">Feb – Aug 2019</div><div class="tl-title">Pizza Maker & Customer Service</div><div class="tl-org">Domino's Pizza</div><div class="tl-desc">Order handling, food prep, stock rotation, and dough management.</div></div></div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay">
+      <div class="res-col-heading">Education & Awards</div>
+      <div class="tl">
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-date">2021 – 2025 (Projected)</div><div class="tl-title">Bachelor of Commerce</div><div class="tl-org">Macquarie University — Business Information Systems</div><div class="tl-desc">Systems analysis, information management, business processes, and tech-driven solutions.</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-date">Graduated 2020</div><div class="tl-title">Higher School Certificate (HSC)</div><div class="tl-org">Concord High School</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-date">Award</div><div class="tl-title">Team Member of the Month</div><div class="tl-org">KFC</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-date">Certified</div><div class="tl-title">First Aid Training (CPR)</div><div class="tl-org">Hero HQ</div></div></div>
+      </div>
+      <a href="mailto:paul12apersonall@gmail.com" class="btn-pill bpf" style="margin-top:1rem;display:inline-flex;align-items:center;gap:0.5rem;">Request Full CV →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="sec-eyebrow reveal">Contact</p>
+  <h2 class="sec-heading reveal">Let's <em>Connect</em></h2>
+  <div class="contact-wrap">
+    <div class="reveal">
+      <p class="contact-blurb">Have a project, opportunity, or just want to say hello? I'd genuinely love to hear from you. My inbox is always open.</p>
+      <div class="c-detail"><div class="c-icon">✉</div><div class="c-text"><a href="mailto:paul12apersonall@gmail.com">paul12apersonall@gmail.com</a></div></div>
+      <div class="c-detail"><div class="c-icon">☏</div><div class="c-text">0452 440 826</div></div>
+      <div class="c-detail"><div class="c-icon">📍</div><div class="c-text">Sydney, NSW</div></div>
+      <div class="c-socials"><a href="https://www.linkedin.com/in/paullim02" target="_blank" class="c-social"><span style="font-weight:700;">in</span> LinkedIn</a></div>
+    </div>
+    <div class="cf reveal reveal-delay">
+      <div class="fg"><label>Your Name</label><input type="text" id="cf-name" placeholder="e.g. Jane Smith"></div>
+      <div class="fg"><label>Email Address</label><input type="email" id="cf-email" placeholder="jane@example.com"></div>
+      <div class="fg"><label>Message</label><textarea rows="5" id="cf-msg"></textarea></div>
+      <div id="cf-error" style="font-size:0.78rem;color:#f87171;display:none;margin-bottom:0.5rem;">Please fill in all fields before sending.</div>
+      <div id="cf-success" style="font-size:0.78rem;color:#7ec47e;display:none;margin-bottom:0.5rem;">✓ Opening your email app now…</div>
+      <button onclick="sendContactForm()" class="btn-pill bpf" style="text-align:center;width:100%;cursor:pointer;">Send Message →</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Paul Junseo Lim — All rights reserved.</p>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/paullim02" target="_blank">LinkedIn</a>
+    <a href="mailto:paul12apersonall@gmail.com">Email</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const obs = new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');obs.unobserve(x.target);}}),{threshold:0.07});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  // Working contact form
+  function sendContactForm() {
+    const name = document.getElementById('cf-name').value.trim();
+    const email = document.getElementById('cf-email').value.trim();
+    const msg = document.getElementById('cf-msg').value.trim();
+    const err = document.getElementById('cf-error');
+    const ok = document.getElementById('cf-success');
+    err.style.display = 'none';
+    ok.style.display = 'none';
+    if (!name || !email || !msg) {
+      err.style.display = 'block';
+      return;
+    }
+    const subject = encodeURIComponent('Portfolio enquiry from ' + name);
+    const body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\n' + msg);
+    window.location.href = 'mailto:paul12apersonall@gmail.com?subject=' + subject + '&body=' + body;
+    ok.style.display = 'block';
+  }
+
+  // Sigma Dog Care tab switcher
+  function sgSwitch(id, btn) {
+    ['owner','carer','errors'].forEach(function(t) {
+      var p = document.getElementById('sgp-' + t);
+      if (p) p.style.display = 'none';
+      var b = document.getElementById('sgtab-' + t);
+      if (b) { b.style.color = 'rgba(255,255,255,0.3)'; b.style.borderBottomColor = 'transparent'; }
+    });
+    var panel = document.getElementById('sgp-' + id);
+    if (panel) panel.style.display = 'flex';
+    btn.style.color = '#6a9e6a';
+    btn.style.borderBottomColor = '#6a9e6a';
+  }
+
+  // Kinetic real iframe tab switcher
+  function kRealSwitch(id, btn) {
+    document.querySelectorAll('.kreal-panel').forEach(p => p.style.display = 'none');
+    document.getElementById('kreal-' + id).style.display = 'block';
+    document.querySelectorAll('.kreal-tab').forEach(t => {
+      t.style.color = 'rgba(240,235,224,0.4)';
+      t.style.borderBottomColor = 'transparent';
+    });
+    btn.style.color = '#EFC84A';
+    btn.style.borderBottomColor = '#EFC84A';
+  }
+</script>
+</body>
+</html>
