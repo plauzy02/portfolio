@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heidi — Kinetic Connect · Score → Revenue</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #EFC84A;
+    --yellow-dark: #D4A820;
+    --yellow-dim: rgba(239,200,74,0.10);
+    --yellow-border: rgba(239,200,74,0.22);
+    --navy: #0E0F1A;
+    --navy-2: #13141F;
+    --navy-3: #1A1B28;
+    --navy-4: #222336;
+    --navy-5: #2C2D42;
+    --text-1: #FFFFFF;
+    --text-2: #A8ABBE;
+    --text-3: #606278;
+    --text-4: #404256;
+    --green: #22C55E;
+    --green-dim: rgba(34,197,94,0.10);
+    --green-border: rgba(34,197,94,0.22);
+    --red: #EF4444;
+    --red-dim: rgba(239,68,68,0.10);
+    --blue: #60A5FA;
+    --blue-dim: rgba(96,165,250,0.10);
+    --purple: #A78BFA;
+    --purple-dim: rgba(167,139,250,0.12);
+    --orange: #FB923C;
+    --orange-dim: rgba(251,146,60,0.10);
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', monospace;
+    --r: 8px; --r-lg: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--navy); color: var(--text-1); font-family: var(--sans); min-height: 100vh; padding-bottom: 60px; }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--navy-2); border-bottom: 1px solid var(--navy-4);
+    padding: 0 32px; height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .tb-left { display: flex; align-items: center; gap: 10px; }
+  .h-logo { width: 28px; height: 28px; background: var(--yellow); border-radius: 7px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+  .h-logo span { font-size: 15px; font-weight: 800; color: var(--navy); }
+  .h-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--navy-2); position: absolute; top: 1px; right: 1px; }
+  .tb-name { font-size: 15px; font-weight: 700; color: var(--text-1); letter-spacing: -0.3px; }
+  .tb-sep { color: var(--navy-5); font-size: 18px; }
+  .tb-page { font-size: 13px; color: var(--text-3); font-family: var(--mono); }
+  .tb-pill { display: flex; align-items: center; gap: 6px; background: var(--yellow-dim); border: 1px solid var(--yellow-border); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--yellow); font-family: var(--mono); font-weight: 500; }
+  .tb-pill-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--yellow); animation: pulse 2s ease infinite; }
+
+  /* HERO */
+  .hero { background: var(--navy-2); border-bottom: 1px solid var(--navy-4); padding: 36px 32px 28px; }
+  .hero-inner { max-width: 820px; margin: 0 auto; }
+
+  .hero-context {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--navy-4); border: 1px solid var(--navy-5);
+    border-radius: var(--r); padding: 7px 12px; margin-bottom: 16px;
+    font-size: 12px; color: var(--text-3);
+  }
+  .hero-context svg { width: 13px; height: 13px; stroke: var(--text-3); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .hero-context strong { color: var(--text-2); }
+
+  .hero-h { font-size: 30px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.15; margin-bottom: 8px; }
+  .hero-h em { font-style: italic; color: var(--yellow); font-weight: 400; }
+  .hero-p { font-size: 13px; color: var(--text-2); line-height: 1.7; max-width: 540px; margin-bottom: 20px; }
+
+  /* LOOP DIAGRAM */
+  .loop-row {
+    display: flex; align-items: center; gap: 0;
+    background: var(--navy-3); border: 1px solid var(--navy-5);
+    border-radius: var(--r-lg); overflow: hidden;
+    flex-wrap: wrap;
+  }
+
+  .loop-step {
+    flex: 1; min-width: 120px;
+    padding: 14px 16px;
+    border-right: 1px solid var(--navy-5);
+    position: relative;
+  }
+  .loop-step:last-child { border-right: none; }
+
+  .loop-step::after {
+    content: '→';
+    position: absolute; right: -8px; top: 50%; transform: translateY(-50%);
+    color: var(--navy-5); font-size: 14px; z-index: 2;
+  }
+  .loop-step:last-child::after { display: none; }
+
+  .ls-num { font-size: 10px; font-family: var(--mono); color: var(--text-4); margin-bottom: 4px; }
+  .ls-label { font-size: 12px; font-weight: 600; color: var(--text-1); margin-bottom: 2px; }
+  .ls-sub { font-size: 11px; color: var(--text-3); line-height: 1.4; }
+
+  .ls-highlight .ls-label { color: var(--yellow); }
+
+  /* SEARCH AREA */
+  .main { max-width: 820px; margin: 0 auto; padding: 24px 32px 0; }
+
+  .search-strip {
+    display: flex; gap: 8px; margin-bottom: 14px;
+    background: var(--navy-3); border: 1px solid var(--navy-5);
+    border-radius: var(--r-lg); padding: 8px;
+    align-items: center;
+  }
+  .ss-field {
+    flex: 1; display: flex; align-items: center; gap: 8px;
+    padding: 0 10px;
+  }
+  .ss-field svg { width: 14px; height: 14px; stroke: var(--text-4); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .ss-field input { flex: 1; border: none; outline: none; background: transparent; font-family: var(--sans); font-size: 13px; color: var(--text-1); }
+  .ss-field input::placeholder { color: var(--text-4); }
+  .ss-div { width: 1px; height: 24px; background: var(--navy-5); flex-shrink: 0; }
+  .ss-go { background: var(--yellow); color: var(--navy); border: none; border-radius: var(--r); padding: 9px 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: var(--sans); transition: background 0.15s; white-space: nowrap; }
+  .ss-go:hover { background: var(--yellow-dark); }
+
+  /* RANK NOTICE */
+  .rank-notice {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 13px; background: var(--yellow-dim);
+    border: 1px solid var(--yellow-border); border-radius: var(--r);
+    margin-bottom: 12px; font-size: 12px; color: #c9a430;
+  }
+  .rn-orb { width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fde68a, var(--yellow), var(--yellow-dark)); box-shadow: 0 0 6px rgba(239,200,74,0.25); flex-shrink: 0; }
+  .rank-notice strong { color: var(--yellow); }
+
+  /* RESULTS */
+  .results-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px; flex-wrap: wrap; gap: 6px;
+  }
+  .rh-count { font-size: 13px; color: var(--text-3); }
+  .rh-count strong { color: var(--text-1); }
+  .rh-sort { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-4); }
+  .sort-btn { padding: 3px 8px; border-radius: 4px; border: none; background: transparent; font-size: 11px; color: var(--text-3); cursor: pointer; font-family: var(--sans); transition: all 0.12s; }
+  .sort-btn.active { background: var(--navy-4); border: 1px solid var(--navy-5); color: var(--yellow); }
+
+  /* CLINIC CARDS */
+  .cards { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+
+  .c-card {
+    background: var(--navy-3); border: 1px solid var(--navy-5);
+    border-radius: var(--r-lg); overflow: hidden;
+    cursor: pointer; transition: all 0.15s;
+    animation: fadeUp 0.3s ease both;
+  }
+  .c-card:nth-child(1) { animation-delay: 0.05s; }
+  .c-card:nth-child(2) { animation-delay: 0.1s; }
+  .c-card:nth-child(3) { animation-delay: 0.15s; }
+  .c-card:nth-child(5) { animation-delay: 0.2s; }
+
+  .c-card:hover { border-color: var(--navy-4); box-shadow: 0 4px 16px rgba(0,0,0,0.35); transform: translateY(-1px); }
+  .c-card.top { border-color: var(--yellow-border); }
+  .c-card.top:hover { border-color: var(--yellow); box-shadow: 0 4px 20px rgba(239,200,74,0.08); }
+  .c-card.dim { opacity: 0.5; }
+  .c-card.dim:hover { opacity: 0.7; transform: none; }
+
+  .c-row { display: grid; grid-template-columns: 44px 1fr 46px; }
+
+  .rank-col { border-right: 1px solid var(--navy-4); display: flex; align-items: center; justify-content: center; }
+  .rank-n { font-size: 17px; font-weight: 700; color: var(--text-4); }
+  .rank-n.r1 { color: var(--yellow); }
+
+  .c-body { padding: 12px 14px; }
+  .c-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 3px; }
+  .c-name { font-size: 14px; font-weight: 700; letter-spacing: -0.2px; }
+
+  .badges { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+  .badge { font-size: 10px; font-family: var(--mono); font-weight: 500; padding: 2px 6px; border-radius: 4px; border: 1px solid; white-space: nowrap; }
+  .b-y { background: var(--yellow-dim); color: var(--yellow); border-color: var(--yellow-border); }
+  .b-blue { background: var(--blue-dim); color: var(--blue); border-color: rgba(96,165,250,0.2); }
+  .b-purple { background: var(--purple-dim); color: var(--purple); border-color: rgba(167,139,250,0.2); }
+  .b-dim { background: var(--navy-4); color: var(--text-4); border-color: var(--navy-5); }
+
+  .c-loc { font-size: 11px; color: var(--text-3); font-family: var(--mono); margin-bottom: 7px; }
+  .c-stats { display: flex; gap: 12px; flex-wrap: wrap; }
+  .cst { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-3); }
+  .cst svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .h-strip { margin: 0 14px 10px; padding: 7px 10px; background: var(--yellow-dim); border: 1px solid var(--yellow-border); border-radius: 6px; display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--yellow); font-weight: 500; }
+  .h-strip svg { width: 12px; height: 12px; stroke: var(--yellow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+  /* SIGNAL BARS */
+  .sig-col { border-left: 1px solid var(--navy-4); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 8px; gap: 3px; }
+  .sig-bars { display: flex; gap: 2px; align-items: flex-end; height: 18px; }
+  .sb { width: 4px; border-radius: 2px; background: var(--navy-5); }
+  .sb.on { background: var(--yellow); }
+  .sb.on.top { background: var(--purple); }
+  .sb.on.cool { background: var(--blue); }
+  .sb.on.warm { background: var(--orange); }
+  .sb.h1 { height: 5px; } .sb.h2 { height: 9px; } .sb.h3 { height: 13px; } .sb.h4 { height: 18px; }
+  .sig-tier { font-size: 9px; font-family: var(--mono); color: var(--text-4); }
+
+  /* DIVIDER */
+  .sec-div { display: flex; align-items: center; gap: 10px; padding: 6px 0; }
+  .div-l { flex: 1; height: 1px; background: var(--navy-4); }
+  .div-t { font-size: 10px; font-family: var(--mono); color: var(--text-4); white-space: nowrap; }
+
+  /* INSIGHT BOX */
+  .insight-box {
+    background: var(--navy-3); border: 1px solid var(--navy-5);
+    border-radius: var(--r-lg); padding: 16px;
+    display: flex; align-items: flex-start; gap: 12px;
+    animation: fadeUp 0.3s 0.25s ease both;
+  }
+  .insight-orb { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: radial-gradient(circle at 35% 35%, #fde68a, var(--yellow), var(--yellow-dark)); box-shadow: 0 0 12px rgba(239,200,74,0.2); }
+  .insight-text { flex: 1; }
+  .insight-label { font-size: 10px; font-family: var(--mono); color: var(--yellow); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
+  .insight-body { font-size: 13px; color: var(--text-2); line-height: 1.65; }
+  .insight-body strong { color: var(--text-1); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .topbar, .hero, .main { padding-left: 16px; padding-right: 16px; }
+    .hero-h { font-size: 22px; }
+    .loop-row { flex-direction: column; }
+    .loop-step { border-right: none; border-bottom: 1px solid var(--navy-5); }
+    .loop-step:last-child { border-bottom: none; }
+    .loop-step::after { display: none; }
+    .ss-div { display: none; }
+    .tb-pill { display: none; }
+    .badges { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="tb-left">
+    <div class="h-logo"><span>H</span><div class="h-dot"></div></div>
+    <div class="tb-name">heidi</div>
+    <div class="tb-sep">/</div>
+    <div class="tb-page">Kinetic Connect · Scaling Proof</div>
+  </div>
+  <div class="tb-pill"><div class="tb-pill-dot"></div>Contribution score → revenue pressure</div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-context">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>This is a <strong>scaling argument</strong> — not a second product. It shows why clinics cannot afford to ignore their contribution score.</span>
+    </div>
+    <h1 class="hero-h">The score becomes <em>visible to patients.</em><br>That makes it a revenue lever.</h1>
+    <p class="hero-p">An abstract data access tier is a weak incentive. A search rank position that determines whether patients book you or your competitor is not. Kinetic Connect makes the contribution score tangible — and ties it directly to clinic revenue.</p>
+
+    <!-- CLOSED LOOP -->
+    <div class="loop-row">
+      <div class="loop-step ls-highlight">
+        <div class="ls-num">01</div>
+        <div class="ls-label">Clinic shares</div>
+        <div class="ls-sub">Completes session, contribution score increments</div>
+      </div>
+      <div class="loop-step ls-highlight">
+        <div class="ls-num">02</div>
+        <div class="ls-label">Score rises</div>
+        <div class="ls-sub">Tier unlocks, search rank improves on Kinetic Connect</div>
+      </div>
+      <div class="loop-step ls-highlight">
+        <div class="ls-num">03</div>
+        <div class="ls-label">More bookings</div>
+        <div class="ls-sub">Patients find and select higher-ranked clinics first</div>
+      </div>
+      <div class="loop-step ls-highlight">
+        <div class="ls-num">04</div>
+        <div class="ls-label">More history</div>
+        <div class="ls-sub">More sessions → more to share → score compounds further</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- SEARCH -->
+  <div class="search-strip">
+    <div class="ss-field">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" value="Lower back — chronic" placeholder="Condition or treatment...">
+    </div>
+    <div class="ss-div"></div>
+    <div class="ss-field" style="flex:0.5;min-width:120px;">
+      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <input type="text" value="Surry Hills, 2010" placeholder="Location...">
+    </div>
+    <button class="ss-go">Search</button>
+  </div>
+
+  <div class="rank-notice">
+    <div class="rn-orb"></div>
+    <span>Ranked by <strong>Heidi Network Contribution Score</strong> — clinics that share more appear higher</span>
+  </div>
+
+  <div class="results-header">
+    <div class="rh-count">Showing <strong>4 clinics</strong> near Surry Hills</div>
+    <div class="rh-sort">
+      Sort:
+      <button class="sort-btn active">Relevance</button>
+      <button class="sort-btn" onclick="this.parentNode.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Distance</button>
+      <button class="sort-btn" onclick="this.parentNode.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Rating</button>
+    </div>
+  </div>
+
+  <div class="cards">
+
+    <!-- 1 -->
+    <div class="c-card top">
+      <div class="c-row">
+        <div class="rank-col"><div class="rank-n r1">1</div></div>
+        <div>
+          <div class="c-body">
+            <div class="c-top">
+              <div class="c-name">Apex Rehabilitation</div>
+              <div class="badges">
+                <span class="badge b-purple">Top 8%</span>
+                <span class="badge b-blue">History match</span>
+                <span class="badge b-y">T4 · 1,847 shared</span>
+              </div>
+            </div>
+            <div class="c-loc">0.8 km · Surry Hills · Tomorrow 10am</div>
+            <div class="c-stats">
+              <div class="cst"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.8 · 312 reviews</div>
+              <div class="cst"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Outcome: 4.2/5</div>
+            </div>
+          </div>
+          <div class="h-strip">
+            <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+            Your prior history is accessible here with consent
+          </div>
+        </div>
+        <div class="sig-col">
+          <div class="sig-bars"><div class="sb h1 on top"></div><div class="sb h2 on top"></div><div class="sb h3 on top"></div><div class="sb h4 on top"></div></div>
+          <div class="sig-tier">T4</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="c-card">
+      <div class="c-row">
+        <div class="rank-col"><div class="rank-n">2</div></div>
+        <div>
+          <div class="c-body">
+            <div class="c-top">
+              <div class="c-name">Harbour Physio</div>
+              <div class="badges"><span class="badge b-y">T2 · 412 shared</span></div>
+            </div>
+            <div class="c-loc">1.2 km · Darlinghurst · Thu 2pm</div>
+            <div class="c-stats">
+              <div class="cst"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.6 · 187 reviews</div>
+              <div class="cst"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Outcome: 3.8/5</div>
+            </div>
+          </div>
+        </div>
+        <div class="sig-col">
+          <div class="sig-bars"><div class="sb h1 on cool"></div><div class="sb h2 on cool"></div><div class="sb h3 on cool"></div><div class="sb h4"></div></div>
+          <div class="sig-tier">T2</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="c-card">
+      <div class="c-row">
+        <div class="rank-col"><div class="rank-n">3</div></div>
+        <div>
+          <div class="c-body">
+            <div class="c-top">
+              <div class="c-name">Peak Health Clinic</div>
+              <div class="badges"><span class="badge b-dim">New · T1</span></div>
+            </div>
+            <div class="c-loc">1.6 km · Redfern · Wed 9am</div>
+            <div class="c-stats">
+              <div class="cst"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.4 · 43 reviews</div>
+              <div class="cst" style="color:var(--text-4)"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Building score</div>
+            </div>
+          </div>
+        </div>
+        <div class="sig-col">
+          <div class="sig-bars"><div class="sb h1 on warm"></div><div class="sb h2"></div><div class="sb h3"></div><div class="sb h4"></div></div>
+          <div class="sig-tier">T1</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="sec-div">
+      <div class="div-l"></div>
+      <div class="div-t">Not connected to Heidi Kinetic</div>
+      <div class="div-l"></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="c-card dim">
+      <div class="c-row">
+        <div class="rank-col"><div class="rank-n">4</div></div>
+        <div>
+          <div class="c-body">
+            <div class="c-top">
+              <div class="c-name" style="color:var(--text-3)">Shoreside Physio</div>
+              <div class="badges"><span class="badge b-dim">Not connected</span></div>
+            </div>
+            <div class="c-loc">2.1 km · Waterloo · Fri 11am</div>
+            <div class="c-stats">
+              <div class="cst"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.2 · 29 reviews</div>
+              <div class="cst" style="color:var(--text-4)"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>No history access</div>
+            </div>
+          </div>
+        </div>
+        <div class="sig-col" style="opacity:0.25">
+          <div class="sig-bars"><div class="sb h1"></div><div class="sb h2"></div><div class="sb h3"></div><div class="sb h4"></div></div>
+          <div class="sig-tier">—</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- INSIGHT -->
+  <div class="insight-box">
+    <div class="insight-orb"></div>
+    <div class="insight-text">
+      <div class="insight-label">Why this closes the loop</div>
+      <div class="insight-body">The contribution score was already doing important work — unlocking history access and benchmarking. Kinetic Connect adds a second, more visceral pressure: <strong>search rank position that patients see directly</strong>. Shoreside Physio isn't penalised or blocked. They're simply outranked by clinics that chose to participate. No coercion. The market enforces it.</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

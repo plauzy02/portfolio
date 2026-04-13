@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heidi — Kinetic Network</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Heidi exact brand */
+    --yellow: #EFC84A;
+    --yellow-dark: #D4A820;
+    --yellow-dim: rgba(239,200,74,0.12);
+    --yellow-border: rgba(239,200,74,0.25);
+
+    --navy: #0E0F1A;
+    --navy-2: #13141F;
+    --navy-3: #1A1B28;
+    --navy-4: #222336;
+    --navy-5: #2C2D42;
+
+    --white: #FFFFFF;
+    --off-white: #F0F0F0;
+    --text-1: #FFFFFF;
+    --text-2: #A8ABBE;
+    --text-3: #606278;
+    --text-4: #404256;
+
+    --green: #22C55E;
+    --green-dim: rgba(34,197,94,0.12);
+    --red: #EF4444;
+    --red-dim: rgba(239,68,68,0.12);
+    --blue: #60A5FA;
+    --blue-dim: rgba(96,165,250,0.12);
+    --orange: #FB923C;
+    --orange-dim: rgba(251,146,60,0.12);
+
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', monospace;
+
+    --r: 8px;
+    --r-lg: 12px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--navy); color: var(--text-1); font-family: var(--sans); font-size: 14px; }
+
+  /* ── LAYOUT ── */
+  .shell { display: flex; min-height: 100vh; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 240px; flex-shrink: 0;
+    background: var(--navy-2);
+    border-right: 1px solid var(--navy-5);
+    display: flex; flex-direction: column;
+    position: sticky; top: 0; height: 100vh;
+    overflow-y: auto; z-index: 50;
+    transition: transform 0.25s;
+  }
+
+  .sidebar-logo {
+    padding: 18px 16px 14px;
+    border-bottom: 1px solid var(--navy-4);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  /* Heidi H logo */
+  .h-logo {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--yellow);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; position: relative;
+  }
+  .h-logo-letter {
+    font-size: 17px; font-weight: 700; color: var(--navy); line-height: 1;
+  }
+  .h-logo-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--navy); border: 1.5px solid var(--yellow);
+    position: absolute; top: 2px; right: 2px;
+    background: var(--navy-2);
+  }
+
+  .logo-words { display: flex; flex-direction: column; }
+  .logo-name { font-size: 16px; font-weight: 700; color: var(--white); letter-spacing: -0.3px; }
+  .logo-sub { font-size: 10px; color: var(--text-3); font-family: var(--mono); margin-top: 1px; }
+
+  .sb-section { padding: 16px 12px 6px; font-size: 10px; font-family: var(--mono); color: var(--text-4); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; }
+
+  .sb-clinic {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px; margin: 1px 6px; border-radius: var(--r);
+    cursor: pointer; border: none; background: transparent;
+    width: calc(100% - 12px); text-align: left;
+    transition: background 0.12s;
+  }
+  .sb-clinic:hover { background: var(--navy-4); }
+  .sb-clinic.active { background: var(--yellow-dim); border: 1px solid var(--yellow-border); }
+
+  .clinic-av {
+    width: 28px; height: 28px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .av-out { background: var(--red-dim); color: var(--red); }
+  .av-new { background: var(--orange-dim); color: var(--orange); }
+  .av-mid { background: var(--blue-dim); color: var(--blue); }
+  .av-hi { background: var(--yellow-dim); color: var(--yellow); }
+
+  .clinic-av-info { flex: 1; min-width: 0; }
+  .clinic-av-name { font-size: 12px; font-weight: 500; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sb-clinic.active .clinic-av-name { color: var(--yellow); }
+  .clinic-av-tier { font-size: 10px; color: var(--text-3); font-family: var(--mono); margin-top: 1px; }
+
+  .status-pip { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .pip-out { background: var(--red); }
+  .pip-new { background: var(--orange); }
+  .pip-mid { background: var(--blue); }
+  .pip-hi { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+
+  .sb-divider { height: 1px; background: var(--navy-4); margin: 10px 12px; }
+
+  .sb-nav-btn {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px; margin: 1px 6px; border-radius: var(--r);
+    cursor: pointer; border: none; background: transparent;
+    width: calc(100% - 12px); text-align: left;
+    font-size: 13px; color: var(--text-2); font-family: var(--sans);
+    transition: all 0.12s;
+  }
+  .sb-nav-btn:hover { background: var(--navy-4); color: var(--text-1); }
+  .sb-nav-btn.active { background: var(--yellow-dim); color: var(--yellow); }
+  .sb-nav-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+  /* NETWORK WIDGET */
+  .network-widget {
+    margin-top: auto; padding: 14px 16px;
+    border-top: 1px solid var(--navy-4);
+  }
+  .nw-top { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .nw-label { font-size: 11px; color: var(--text-3); font-weight: 500; }
+  .nw-pct { font-size: 11px; color: var(--yellow); font-family: var(--mono); font-weight: 500; }
+  .nw-track { height: 4px; background: var(--navy-5); border-radius: 2px; overflow: hidden; margin-bottom: 6px; }
+  .nw-fill { height: 100%; background: linear-gradient(90deg, var(--yellow-dark), var(--yellow)); border-radius: 2px; transition: width 0.7s ease; }
+  .nw-sub { font-size: 10px; color: var(--text-4); font-family: var(--mono); }
+
+  /* MOBILE HEADER */
+  .mobile-header {
+    display: none;
+    background: var(--navy-2);
+    border-bottom: 1px solid var(--navy-4);
+    padding: 12px 16px;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 60;
+  }
+
+  .mobile-logo { display: flex; align-items: center; gap: 8px; }
+
+  .hamburger {
+    width: 36px; height: 36px; border-radius: var(--r);
+    background: var(--navy-4); border: 1px solid var(--navy-5);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    cursor: pointer;
+  }
+  .hamburger span { width: 16px; height: 1.5px; background: var(--text-2); border-radius: 1px; }
+
+  /* MOBILE NAV TABS */
+  .mobile-nav {
+    display: none;
+    background: var(--navy-2);
+    border-bottom: 1px solid var(--navy-4);
+    padding: 0 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .mobile-nav::-webkit-scrollbar { display: none; }
+  .mobile-nav-inner { display: flex; gap: 2px; padding: 8px 0; white-space: nowrap; }
+
+  .mob-tab {
+    padding: 7px 14px; border-radius: 6px;
+    font-size: 12px; font-weight: 500;
+    border: none; background: transparent;
+    color: var(--text-3); cursor: pointer; font-family: var(--sans);
+    transition: all 0.12s; flex-shrink: 0;
+  }
+  .mob-tab:hover { color: var(--text-1); }
+  .mob-tab.active { background: var(--yellow-dim); color: var(--yellow); border: 1px solid var(--yellow-border); }
+
+  /* MOBILE CLINIC SELECT */
+  .mobile-clinic-select {
+    display: none;
+    padding: 8px 16px;
+    background: var(--navy-2);
+    border-bottom: 1px solid var(--navy-4);
+    gap: 6px; flex-wrap: wrap;
+  }
+
+  .mob-clinic-chip {
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 11px; font-weight: 500;
+    border: 1px solid var(--navy-5);
+    background: transparent; color: var(--text-3);
+    cursor: pointer; font-family: var(--sans);
+    transition: all 0.12s;
+  }
+  .mob-clinic-chip.active { background: var(--yellow-dim); border-color: var(--yellow-border); color: var(--yellow); }
+
+  /* SIDEBAR OVERLAY (mobile) */
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6); z-index: 49;
+  }
+
+  /* MAIN */
+  .main { flex: 1; padding: 28px 32px; max-width: 900px; min-width: 0; }
+
+  /* PAGE TOP */
+  .page-top { margin-bottom: 24px; animation: fadeUp 0.3s ease both; }
+  .breadcrumb { font-size: 11px; color: var(--text-4); font-family: var(--mono); margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+  .breadcrumb span { color: var(--text-3); }
+  .page-title { font-size: 24px; font-weight: 700; color: var(--white); letter-spacing: -0.4px; margin-bottom: 5px; line-height: 1.2; }
+  .page-title em { font-style: italic; color: var(--yellow); font-weight: 400; }
+  .page-sub { font-size: 13px; color: var(--text-2); line-height: 1.65; max-width: 560px; }
+
+  /* BANNER */
+  .banner {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 16px; border-radius: var(--r-lg);
+    border: 1px solid; margin-bottom: 20px;
+    animation: fadeUp 0.3s 0.04s ease both;
+  }
+  .ban-out { background: var(--red-dim); border-color: rgba(239,68,68,0.2); }
+  .ban-new { background: var(--orange-dim); border-color: rgba(251,146,60,0.2); }
+  .ban-mid { background: var(--blue-dim); border-color: rgba(96,165,250,0.2); }
+  .ban-hi { background: var(--yellow-dim); border-color: var(--yellow-border); }
+
+  .ban-icon { width: 32px; height: 32px; border-radius: var(--r); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ban-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .ban-out .ban-icon { background: rgba(239,68,68,0.2); color: var(--red); }
+  .ban-new .ban-icon { background: rgba(251,146,60,0.2); color: var(--orange); }
+  .ban-mid .ban-icon { background: rgba(96,165,250,0.2); color: var(--blue); }
+  .ban-hi .ban-icon { background: rgba(239,200,74,0.2); color: var(--yellow); }
+
+  .ban-body { flex: 1; min-width: 0; }
+  .ban-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .ban-out .ban-title { color: var(--red); }
+  .ban-new .ban-title { color: var(--orange); }
+  .ban-mid .ban-title { color: var(--blue); }
+  .ban-hi .ban-title { color: var(--yellow); }
+  .ban-text { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+
+  .ban-btn {
+    padding: 7px 14px; border-radius: 6px;
+    font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 1px solid var(--yellow);
+    background: var(--yellow); color: var(--navy);
+    font-family: var(--sans); transition: all 0.15s;
+    flex-shrink: 0; align-self: center; white-space: nowrap;
+  }
+  .ban-btn:hover { background: var(--yellow-dark); border-color: var(--yellow-dark); }
+
+  /* TOGGLE CARD */
+  .toggle-card {
+    background: var(--navy-3); border: 1px solid var(--navy-5);
+    border-radius: var(--r-lg); padding: 14px 16px;
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.3s 0.07s ease both;
+  }
+  .toggle-icon { width: 34px; height: 34px; border-radius: var(--r); background: var(--yellow-dim); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .toggle-icon svg { width: 17px; height: 17px; stroke: var(--yellow); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .toggle-label { flex: 1; min-width: 0; }
+  .toggle-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .toggle-sub { font-size: 12px; color: var(--text-2); }
+
+  /* Switch */
+  .sw { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
+  .sw input { opacity: 0; width: 0; height: 0; }
+  .sw-track { position: absolute; inset: 0; background: var(--navy-5); border-radius: 12px; cursor: pointer; transition: background 0.2s; border: 1px solid var(--navy-4); }
+  .sw input:checked + .sw-track { background: var(--yellow); border-color: var(--yellow); }
+  .sw-track::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: var(--text-3); border-radius: 50%; transition: left 0.2s; }
+  .sw input:checked + .sw-track::after { left: 20px; background: var(--navy); }
+
+  /* STATS */
+  .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 20px; animation: fadeUp 0.3s 0.1s ease both; }
+
+  .stat-card {
+    background: var(--navy-3); border: 1px solid var(--navy-5);
+    border-radius: var(--r-lg); padding: 16px;
+    position: relative; overflow: hidden;
+  }
+  .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .sc-y::before { background: var(--yellow); }
+  .sc-b::before { background: var(--blue); }
+  .sc-g::before { background: var(--green); }
+
+  .stat-val { font-size: 28px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 3px; line-height: 1; }
+  .sv-locked { color: var(--text-4); filter: blur(5px); user-select: none; }
+  .sv-partial { color: var(--orange); }
+  .sv-full { color: var(--yellow); }
+  .sv-default { color: var(--white); }
+  .stat-lbl { font-size: 10px; color: var(--text-3); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; }
+  .stat-delta { position: absolute; top: 14px; right: 14px; font-size: 10px; color: var(--text-4); font-family: var(--mono); }
+  .sd-pos { color: var(--green); }
+
+  /* SCORE CARD */
+  .score-card {
+    background: var(--navy-3); border: 1px solid var(--navy-5);
+    border-radius: var(--r-lg); padding: 20px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.3s 0.12s ease both;
+  }
+  .sec-label { font-size: 10px; font-family: var(--mono); color: var(--text-4); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; padding-bottom: 14px; border-bottom: 1px solid var(--navy-4); margin-bottom: 16px; }
+  .score-row { display: flex; align-items: flex-end; gap: 14px; margin-bottom: 14px; }
+  .score-num { font-size: 52px; font-weight: 700; letter-spacing: -2px; line-height: 1; }
+  .sn-zero { color: var(--text-4); }
+  .sn-low { color: var(--orange); }
+  .sn-mid { color: var(--blue); }
+  .sn-hi { color: var(--yellow); text-shadow: 0 0 30px rgba(239,200,74,0.3); }
+  .score-meta { padding-bottom: 4px; }
+  .score-tier { font-size: 11px; color: var(--text-3); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.07em; }
+  .score-delta { font-size: 13px; color: var(--text-3); margin-top: 3px; }
+  .score-delta.pos { color: var(--green); font-weight: 600; }
+  .prog-track { height: 6px; background: var(--navy-5); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+  .prog-fill { height: 100%; border-radius: 3px; transition: width 0.9s cubic-bezier(.4,0,.2,1); }
+  .pf-0 { width: 0%; }
+  .pf-1 { width: 12%; background: linear-gradient(90deg, #854d0e, var(--orange)); }
+  .pf-2 { width: 44%; background: linear-gradient(90deg, #1e3a5f, var(--blue)); }
+  .pf-hi { width: 87%; background: linear-gradient(90deg, var(--yellow-dark), var(--yellow)); box-shadow: 0 0 8px rgba(239,200,74,0.3); }
+  .tier-marks { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-4); font-family: var(--mono); }
+
+  /* HEIDI AI INSIGHT */
+  .ai-insight {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 14px; margin-top: 14px;
+    background: rgba(239,200,74,0.07);
+    border: 1px solid rgba(239,200,74,0.2);
+    border-radius: var(--r);
+  }
+  .ai-orb { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; margin-top: 1px; background: radial-gradient(circle at 35% 35%, #fde68a, var(--yellow), var(--yellow-dark)); box-shadow: 0 0 10px rgba(239,200,74,0.3); }
+  .ai-text { font-size: 12px; color: #c9a430; line-height: 1.55; }
+  .ai-text strong { color: var(--yellow); }
+
+  /* ACCESS TABLE */
+  .access-card { background: var(--navy-3); border: 1px solid var(--navy-5); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 20px; animation: fadeUp 0.3s 0.14s ease both; }
+  .ac-header { padding: 14px 16px; background: var(--navy-4); border-bottom: 1px solid var(--navy-5); }
+
+  .tbl { width: 100%; border-collapse: collapse; }
+  .tbl th { padding: 10px 14px; font-size: 10px; font-family: var(--mono); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; text-align: center; border-right: 1px solid var(--navy-4); background: var(--navy-4); }
+  .tbl th:first-child { text-align: left; }
+  .tbl th:last-child { border-right: none; }
+  .tbl td { padding: 10px 14px; font-size: 12px; text-align: center; border-right: 1px solid var(--navy-4); border-top: 1px solid var(--navy-4); color: var(--text-2); }
+  .tbl td:first-child { text-align: left; color: var(--text-1); }
+  .tbl td:last-child { border-right: none; }
+  .tbl tr.active-row td { background: rgba(239,200,74,0.04); }
+  .yes { color: var(--green); font-size: 14px; }
+  .no { color: var(--text-4); font-size: 14px; }
+  .delay { color: var(--orange); font-size: 11px; font-family: var(--mono); font-weight: 500; }
+  .partial { color: var(--blue); font-size: 11px; font-family: var(--mono); font-weight: 500; }
+
+  /* VIEWS */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* PATIENT */
+  .p-card { background: var(--navy-3); border: 1px solid var(--navy-5); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 14px; animation: fadeUp 0.3s ease both; }
+  .p-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--navy-4); border-bottom: 1px solid var(--navy-5); flex-wrap: wrap; gap: 10px; }
+  .p-av { width: 34px; height: 34px; border-radius: var(--r); background: var(--yellow-dim); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--yellow); flex-shrink: 0; font-style: italic; }
+  .p-info { flex: 1; min-width: 100px; }
+  .p-name { font-size: 14px; font-weight: 600; }
+  .p-meta { font-size: 11px; color: var(--text-3); font-family: var(--mono); margin-top: 1px; }
+  .h-badge { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 20px; border: 1px solid; font-family: var(--mono); white-space: nowrap; }
+  .hb-locked { background: var(--red-dim); color: var(--red); border-color: rgba(239,68,68,0.25); }
+  .hb-delay { background: var(--orange-dim); color: var(--orange); border-color: rgba(251,146,60,0.25); }
+  .hb-part { background: var(--blue-dim); color: var(--blue); border-color: rgba(96,165,250,0.25); }
+  .hb-full { background: var(--yellow-dim); color: var(--yellow); border-color: var(--yellow-border); }
+  .hb-pulse { width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: pulse 1.6s ease infinite; }
+  .p-body { padding: 16px; }
+
+  /* Locked state */
+  .locked-state { text-align: center; padding: 28px 16px; }
+  .lock-icon-wrap { width: 44px; height: 44px; border-radius: 12px; background: var(--red-dim); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+  .lock-icon-wrap svg { width: 22px; height: 22px; stroke: var(--red); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .locked-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .locked-sub { font-size: 12px; color: var(--text-2); max-width: 280px; margin: 0 auto 14px; line-height: 1.55; }
+  .outline-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; border: 1px solid var(--yellow); color: var(--yellow); background: transparent; font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--sans); transition: all 0.15s; }
+  .outline-btn:hover { background: var(--yellow); color: var(--navy); }
+
+  /* Timeline */
+  .timeline { padding-left: 18px; position: relative; }
+  .timeline::before { content: ''; position: absolute; left: 5px; top: 6px; bottom: 0; width: 1px; background: var(--navy-4); }
+  .tl-item { position: relative; padding-bottom: 16px; }
+  .tl-item::before { content: ''; position: absolute; left: -15px; top: 4px; width: 8px; height: 8px; border-radius: 50%; background: var(--navy-3); border: 2px solid var(--navy-5); }
+  .tl-active::before { border-color: var(--yellow); background: var(--yellow); box-shadow: 0 0 6px rgba(239,200,74,0.4); }
+  .tl-part::before { border-color: var(--blue); background: var(--blue); }
+  .tl-date { font-size: 10px; color: var(--text-4); font-family: var(--mono); margin-bottom: 2px; }
+  .tl-clinic { font-size: 11px; color: var(--text-3); margin-bottom: 3px; }
+  .tl-summary { font-size: 13px; color: var(--text-1); line-height: 1.5; }
+  .tl-summary.blurred { filter: blur(5px); user-select: none; color: var(--text-3); }
+  .tl-tags { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+  .tag { font-size: 10px; font-family: var(--mono); padding: 2px 7px; border-radius: 4px; background: var(--navy-4); border: 1px solid var(--navy-5); color: var(--text-3); }
+  .tag-y { background: var(--yellow-dim); border-color: var(--yellow-border); color: var(--yellow); }
+  .tag-b { background: var(--blue-dim); border-color: rgba(96,165,250,0.2); color: var(--blue); }
+  .tag-g { background: var(--green-dim); border-color: rgba(34,197,94,0.2); color: var(--green); }
+
+  .delay-notice { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--orange-dim); border: 1px solid rgba(251,146,60,0.25); border-radius: var(--r); font-size: 12px; color: var(--orange); margin-bottom: 10px; }
+  .delay-notice svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+  /* DATA VIEW */
+  .data-card { background: var(--navy-3); border: 1px solid var(--navy-5); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 16px; animation: fadeUp 0.3s ease both; }
+  .data-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--navy-4); gap: 12px; }
+  .data-row:last-child { border-bottom: none; }
+  .data-name { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+  .data-desc { font-size: 11px; color: var(--text-3); }
+  .data-pill { font-size: 10px; font-family: var(--mono); font-weight: 500; padding: 3px 9px; border-radius: 20px; border: 1px solid; white-space: nowrap; flex-shrink: 0; }
+  .dp-y { background: var(--yellow-dim); color: var(--yellow); border-color: var(--yellow-border); }
+  .dp-b { background: var(--blue-dim); color: var(--blue); border-color: rgba(96,165,250,0.2); }
+  .dp-never { background: var(--navy-4); color: var(--text-4); border-color: var(--navy-5); }
+
+  /* SIMULATOR */
+  .sim-card { background: var(--navy-3); border: 1px solid var(--navy-5); border-radius: var(--r-lg); padding: 20px; margin-bottom: 16px; animation: fadeUp 0.3s ease both; }
+  .sim-tabs { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
+  .sim-tab { padding: 7px 14px; border-radius: 6px; border: 1px solid var(--navy-5); background: transparent; color: var(--text-3); font-size: 12px; font-weight: 500; cursor: pointer; font-family: var(--sans); transition: all 0.15s; }
+  .sim-tab:hover { border-color: var(--yellow); color: var(--yellow); }
+  .sim-tab.active { background: var(--yellow); border-color: var(--yellow); color: var(--navy); font-weight: 700; }
+
+  .sim-nodes { display: flex; justify-content: space-around; align-items: center; padding: 20px 0; position: relative; margin-bottom: 14px; }
+  .sim-nodes::before { content: ''; position: absolute; top: 50%; left: 8%; width: 84%; height: 1px; background: var(--navy-5); }
+  .node-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; z-index: 1; }
+  .node-c { width: 36px; height: 36px; border-radius: var(--r); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; border: 2px solid var(--navy-5); background: var(--navy-4); color: var(--text-3); transition: all 0.3s; }
+  .node-c.sharing { background: var(--yellow-dim); border-color: var(--yellow); color: var(--yellow); box-shadow: 0 0 12px rgba(239,200,74,0.2); }
+  .node-c.opted-out { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+  .node-lbl { font-size: 10px; color: var(--text-4); font-family: var(--mono); }
+
+  .sim-outcome { padding: 14px 16px; background: var(--navy-4); border: 1px solid var(--navy-5); border-radius: var(--r); font-size: 12px; color: var(--text-2); line-height: 1.7; min-height: 60px; }
+  .sim-outcome strong { color: var(--white); }
+
+  .cost-card { background: var(--navy-3); border: 1px solid var(--navy-5); border-radius: var(--r-lg); overflow: hidden; animation: fadeUp 0.3s 0.1s ease both; }
+  .cost-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--navy-4); gap: 12px; }
+  .cost-row:last-child { border-bottom: none; }
+  .cost-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .cost-desc { font-size: 12px; color: var(--text-3); }
+  .cost-pill { font-size: 11px; font-family: var(--mono); font-weight: 600; padding: 3px 10px; border-radius: 20px; border: 1px solid; white-space: nowrap; flex-shrink: 0; }
+  .cp-low { background: var(--green-dim); color: var(--green); border-color: rgba(34,197,94,0.25); }
+  .cp-mid { background: var(--orange-dim); color: var(--orange); border-color: rgba(251,146,60,0.25); }
+  .cp-hi { background: var(--red-dim); color: var(--red); border-color: rgba(239,68,68,0.25); }
+
+  /* KEYFRAMES */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .sidebar { position: fixed; left: 0; top: 0; height: 100vh; transform: translateX(-100%); z-index: 51; width: 260px; }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay.open { display: block; }
+    .mobile-header { display: flex; }
+    .mobile-nav { display: block; }
+    .mobile-clinic-select { display: flex; }
+    .main { padding: 16px; }
+    .stats-row { grid-template-columns: repeat(2,1fr); }
+    .stats-row .stat-card:last-child { grid-column: span 2; }
+    .score-num { font-size: 40px; }
+    .tbl { font-size: 11px; }
+    .tbl th, .tbl td { padding: 8px 8px; }
+    .page-title { font-size: 20px; }
+    .network-widget { display: none; }
+    .sim-nodes { gap: 4px; }
+    .node-c { width: 30px; height: 30px; font-size: 11px; }
+  }
+
+  @media (max-width: 420px) {
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .stats-row .stat-card:last-child { grid-column: auto; }
+    .access-card { overflow-x: auto; }
+    .access-card .tbl { min-width: 480px; }
+    .ban-btn { display: none; }
+    .banner { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MOBILE HEADER -->
+<div class="mobile-header">
+  <div class="mobile-logo">
+    <div class="h-logo"><span class="h-logo-letter">H</span><div class="h-logo-dot"></div></div>
+    <div style="font-size:15px;font-weight:700;color:var(--white);letter-spacing:-0.3px;">heidi</div>
+    <div style="font-size:10px;color:var(--text-3);font-family:var(--mono);margin-left:4px;">/ Kinetic</div>
+  </div>
+  <div class="hamburger" onclick="toggleSidebar()">
+    <span></span><span></span><span></span>
+  </div>
+</div>
+
+<!-- MOBILE CLINIC SELECT -->
+<div class="mobile-clinic-select" id="mob-clinics">
+  <button class="mob-clinic-chip active" id="mc-opted-out" onclick="setClinic('opted-out')">Shoreside</button>
+  <button class="mob-clinic-chip" id="mc-new" onclick="setClinic('new')">Peak Health</button>
+  <button class="mob-clinic-chip" id="mc-mid" onclick="setClinic('mid')">Harbour</button>
+  <button class="mob-clinic-chip" id="mc-high" onclick="setClinic('high')">Apex</button>
+</div>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mob-tab active" id="mn-dashboard" onclick="setView('dashboard')">Dashboard</button>
+    <button class="mob-tab" id="mn-patients" onclick="setView('patients')">Patient Lookup</button>
+    <button class="mob-tab" id="mn-data" onclick="setView('data')">Data Sharing</button>
+    <button class="mob-tab" id="mn-simulator" onclick="setView('simulator')">Network Sim</button>
+  </div>
+</div>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sb-overlay" onclick="toggleSidebar()"></div>
+
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="h-logo"><span class="h-logo-letter">H</span><div class="h-logo-dot"></div></div>
+      <div class="logo-words">
+        <div class="logo-name">heidi</div>
+        <div class="logo-sub">Kinetic Network</div>
+      </div>
+    </div>
+
+    <div class="sb-section">Clinic View</div>
+
+    <button class="sb-clinic" id="btn-opted-out" onclick="setClinic('opted-out')">
+      <div class="clinic-av av-out">SP</div>
+      <div class="clinic-av-info"><div class="clinic-av-name">Shoreside Physio</div><div class="clinic-av-tier">Opted out</div></div>
+      <div class="status-pip pip-out"></div>
+    </button>
+    <button class="sb-clinic" id="btn-new" onclick="setClinic('new')">
+      <div class="clinic-av av-new">PH</div>
+      <div class="clinic-av-info"><div class="clinic-av-name">Peak Health Clinic</div><div class="clinic-av-tier">New — Tier 1</div></div>
+      <div class="status-pip pip-new"></div>
+    </button>
+    <button class="sb-clinic" id="btn-mid" onclick="setClinic('mid')">
+      <div class="clinic-av av-mid">HP</div>
+      <div class="clinic-av-info"><div class="clinic-av-name">Harbour Physio</div><div class="clinic-av-tier">Tier 2</div></div>
+      <div class="status-pip pip-mid"></div>
+    </button>
+    <button class="sb-clinic" id="btn-high" onclick="setClinic('high')">
+      <div class="clinic-av av-hi">AR</div>
+      <div class="clinic-av-info"><div class="clinic-av-name">Apex Rehabilitation</div><div class="clinic-av-tier">Tier 4 — Top</div></div>
+      <div class="status-pip pip-hi"></div>
+    </button>
+
+    <div class="sb-divider"></div>
+
+    <button class="sb-nav-btn active" id="nav-dashboard" onclick="setView('dashboard')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </button>
+    <button class="sb-nav-btn" id="nav-patients" onclick="setView('patients')">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Patient Lookup
+    </button>
+    <button class="sb-nav-btn" id="nav-data" onclick="setView('data')">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      Data Sharing
+    </button>
+    <button class="sb-nav-btn" id="nav-simulator" onclick="setView('simulator')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Network Sim
+    </button>
+
+    <div class="network-widget">
+      <div class="nw-top"><span class="nw-label">Network adoption</span><span class="nw-pct" id="nw-pct">34%</span></div>
+      <div class="nw-track"><div class="nw-fill" id="nw-fill" style="width:34%"></div></div>
+      <div class="nw-sub" id="nw-sub">612 of 1,800 clinics</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dashboard">
+      <div class="page-top">
+        <div class="breadcrumb">heidi <span>/</span> Kinetic Network <span>/</span> <span id="bc">Shoreside Physio</span></div>
+        <h1 class="page-title" id="dash-title">Shoreside Physio — <em>Not Participating</em></h1>
+        <p class="page-sub" id="dash-sub">You have opted out of the Kinetic shared history network. Patient history from other clinics is unavailable to you.</p>
+      </div>
+
+      <div class="banner ban-out" id="banner">
+        <div class="ban-icon"><svg id="ban-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+        <div class="ban-body">
+          <div class="ban-title" id="ban-title">Network access blocked</div>
+          <div class="ban-text" id="ban-text">612 clinics are sharing patient history. You are receiving none of it.</div>
+        </div>
+        <button class="ban-btn" id="ban-cta" onclick="doOptIn()">Enable sharing</button>
+      </div>
+
+      <div class="toggle-card">
+        <div class="toggle-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        </div>
+        <div class="toggle-label">
+          <div class="toggle-title">Share patient history with the Kinetic network</div>
+          <div class="toggle-sub">Abstracted outcomes & protocols only. No raw notes, no identifiers.</div>
+        </div>
+        <label class="sw">
+          <input type="checkbox" id="tog" onchange="handleToggle(this)">
+          <div class="sw-track"></div>
+        </label>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card sc-y">
+          <div class="stat-val sv-locked" id="sv-hist">24</div>
+          <div class="stat-lbl">Histories available</div>
+          <div class="stat-delta" id="sd-hist">Locked</div>
+        </div>
+        <div class="stat-card sc-b">
+          <div class="stat-val sv-default" id="sv-score">0</div>
+          <div class="stat-lbl">Contribution score</div>
+          <div class="stat-delta" id="sd-score">—</div>
+        </div>
+        <div class="stat-card sc-g">
+          <div class="stat-val sv-default" id="sv-out">—</div>
+          <div class="stat-lbl">Outcome index</div>
+          <div class="stat-delta sd-pos" id="sd-out">—</div>
+        </div>
+      </div>
+
+      <div class="score-card">
+        <div class="sec-label">Contribution score</div>
+        <div class="score-row">
+          <div class="score-num sn-zero" id="score-num">0</div>
+          <div class="score-meta">
+            <div class="score-tier" id="score-tier">Tier 0 — Inactive</div>
+            <div class="score-delta" id="score-delta">Not opted in</div>
+          </div>
+        </div>
+        <div class="prog-track"><div class="prog-fill pf-0" id="prog-fill"></div></div>
+        <div class="tier-marks"><span>T0</span><span>T1 · 100</span><span>T2 · 300</span><span>T3 · 700</span><span>T4 · 1,200+</span></div>
+        <div class="ai-insight">
+          <div class="ai-orb"></div>
+          <div class="ai-text" id="ai-text"><strong>Heidi insight:</strong> At current network growth, opting out means missing history on ~8 patients per week by Month 6. Tier 2+ clinics are completing intake 40% faster.</div>
+        </div>
+      </div>
+
+      <div class="access-card">
+        <div class="ac-header"><div class="sec-label" style="margin:0;border:none;padding:0;">Access by tier</div></div>
+        <table class="tbl">
+          <tr>
+            <th>Feature</th>
+            <th>T0 · Out</th><th>T1</th><th>T2</th><th>T3–4</th>
+          </tr>
+          <tr><td>View patient history</td><td><span class="no">✕</span></td><td><span class="delay">+48h</span></td><td><span class="partial">70%</span></td><td><span class="yes">✓</span></td></tr>
+          <tr><td>Protocol summaries</td><td><span class="no">✕</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+          <tr><td>Outcome benchmarking</td><td><span class="no">✕</span></td><td><span class="no">✕</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td></tr>
+          <tr><td>Priority feature input</td><td><span class="no">✕</span></td><td><span class="no">✕</span></td><td><span class="no">✕</span></td><td><span class="yes">✓</span></td></tr>
+          <tr><td>Intake time reduction</td><td><span class="no">✕</span></td><td><span class="partial">Partial</span></td><td><span class="partial">Good</span></td><td><span class="yes">Full</span></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- PATIENTS -->
+    <div class="view" id="view-patients">
+      <div class="page-top">
+        <div class="breadcrumb">heidi <span>/</span> Kinetic Network <span>/</span> <span>Patient Lookup</span></div>
+        <h1 class="page-title">Patient <em>Lookup</em></h1>
+        <p class="page-sub">History availability depends on your contribution tier. Referring clinic identity is never surfaced.</p>
+      </div>
+      <div id="p1"></div><div id="p2"></div>
+    </div>
+
+    <!-- DATA -->
+    <div class="view" id="view-data">
+      <div class="page-top">
+        <div class="breadcrumb">heidi <span>/</span> Kinetic Network <span>/</span> <span>Data Sharing</span></div>
+        <h1 class="page-title">Data <em>Sharing Policy</em></h1>
+        <p class="page-sub">Heidi never shares raw clinical notes, subjective assessments, or identifying clinic information.</p>
+      </div>
+      <div class="data-card">
+        <div class="ac-header"><div class="sec-label" style="margin:0;border:none;padding:0;">What Heidi shares via the network</div></div>
+        <div class="data-row"><div><div class="data-name">Session count & duration</div><div class="data-desc">Number of sessions and average length. No dates.</div></div><div class="data-pill dp-y">Shared</div></div>
+        <div class="data-row"><div><div class="data-name">Treatment protocol category</div><div class="data-desc">e.g. "manual therapy + exercise" — no clinician specifics</div></div><div class="data-pill dp-y">Shared</div></div>
+        <div class="data-row"><div><div class="data-name">Outcome rating at discharge</div><div class="data-desc">Structured 1–5 functional outcome score only</div></div><div class="data-pill dp-y">Shared</div></div>
+        <div class="data-row"><div><div class="data-name">Body region & diagnosis code</div><div class="data-desc">ICD category only — abstracted from raw diagnosis</div></div><div class="data-pill dp-b">Abstracted</div></div>
+        <div class="data-row"><div><div class="data-name">Referring clinic identity</div><div class="data-desc">Never surfaced. History is patient-owned, not clinic-linked.</div></div><div class="data-pill dp-never">Never</div></div>
+        <div class="data-row"><div><div class="data-name">Clinician notes & opinions</div><div class="data-desc">Subjective assessments never included under any condition.</div></div><div class="data-pill dp-never">Never</div></div>
+        <div class="data-row"><div><div class="data-name">Patient contact details</div><div class="data-desc">PII stays within your clinic. Zero cross-clinic contact.</div></div><div class="data-pill dp-never">Never</div></div>
+        <div class="data-row"><div><div class="data-name">Treating clinic discovery</div><div class="data-desc">Receiving clinics cannot identify where the patient was treated.</div></div><div class="data-pill dp-never">Never</div></div>
+      </div>
+      <div class="ai-insight" style="border-radius:var(--r-lg);">
+        <div class="ai-orb"></div>
+        <div class="ai-text"><strong>Heidi AI processes all data before it enters the network.</strong> Raw session content is never transmitted. Heidi extracts only structured outcome fields — the same abstraction layer already used to generate clinical notes.</div>
+      </div>
+    </div>
+
+    <!-- SIMULATOR -->
+    <div class="view" id="view-simulator">
+      <div class="page-top">
+        <div class="breadcrumb">heidi <span>/</span> Kinetic Network <span>/</span> <span>Network Simulator</span></div>
+        <h1 class="page-title">Network <em>Simulator</em></h1>
+        <p class="page-sub">Non-participation becomes progressively more costly — not through punishment, but compounding opportunity cost.</p>
+      </div>
+      <div class="sim-card">
+        <div class="sec-label">Phase simulation</div>
+        <div class="sim-tabs">
+          <button class="sim-tab active" id="st1" onclick="runSim(1)">Phase 1 · 19%</button>
+          <button class="sim-tab" id="st2" onclick="runSim(2)">Phase 2 · 45%</button>
+          <button class="sim-tab" id="st3" onclick="runSim(3)">Phase 3 · 80%+</button>
+        </div>
+        <div class="sim-nodes">
+          <div class="node-wrap"><div class="node-c sharing" id="sn0">A</div><div class="node-lbl" id="nl0">Sharing</div></div>
+          <div class="node-wrap"><div class="node-c sharing" id="sn1">B</div><div class="node-lbl" id="nl1">Sharing</div></div>
+          <div class="node-wrap"><div class="node-c opted-out" id="sn2">C</div><div class="node-lbl" id="nl2">Opted out</div></div>
+          <div class="node-wrap"><div class="node-c" id="sn3">D</div><div class="node-lbl" id="nl3">Undecided</div></div>
+          <div class="node-wrap"><div class="node-c" id="sn4">E</div><div class="node-lbl" id="nl4">Undecided</div></div>
+          <div class="node-wrap"><div class="node-c opted-out" id="sn5">F</div><div class="node-lbl" id="nl5">Opted out</div></div>
+        </div>
+        <div class="sim-outcome" id="sim-out"><strong>Phase 1 — Early adopters (19%):</strong> Clinics A and B joined early. Their scores compound while everyone else's stays at zero. C and F opted out — locked history banners daily. D and E are watching. The access gap is becoming visible.</div>
+      </div>
+      <div class="sec-label" style="margin-top:4px;">Why opting out compounds over time</div>
+      <div class="cost-card">
+        <div class="cost-row"><div><div class="cost-name">Month 1</div><div class="cost-desc">Small friction. A handful of patients arrive with locked history banners.</div></div><div class="cost-pill cp-low">Low cost</div></div>
+        <div class="cost-row"><div><div class="cost-name">Month 6</div><div class="cost-desc">Competing clinics completing intake 40% faster. Patients start to notice.</div></div><div class="cost-pill cp-mid">Medium cost</div></div>
+        <div class="cost-row"><div><div class="cost-name">Month 18</div><div class="cost-desc">Zero contribution score. No benchmarking, no feature input. Referrers prefer connected clinics.</div></div><div class="cost-pill cp-hi">High cost</div></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const DATA = {
+  'opted-out': { name:'Shoreside Physio', title:'Shoreside Physio — <em>Not Participating</em>', sub:'You have opted out of the Kinetic shared history network. Patient history from other clinics is unavailable to you.', banCls:'ban-out', banSvg:'<circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>', banTitle:'Network access blocked', banText:'612 clinics are sharing patient history. You are receiving none of it.', showCta:true, tog:false, scoreNum:'0', scoreCls:'sn-zero', progCls:'pf-0', tier:'Tier 0 — Inactive', delta:'Not opted in', deltaCls:'', svHist:'24', svHistCls:'sv-locked', sdHist:'Locked', svScore:'0', sdScore:'—', svOut:'—', sdOut:'—', aiText:'<strong>Heidi insight:</strong> At current network growth, opting out means missing history on ~8 patients per week by Month 6. Tier 2+ clinics are completing intake 40% faster.', nwPct:34, nwCount:612, p1b:'hb-locked', p1t:'History locked', p2b:'hb-locked', p2t:'History locked' },
+  'new': { name:'Peak Health Clinic', title:'Peak Health Clinic — <em>Just Opted In</em>', sub:'You joined the network today. Your contribution score is building. Protocol summaries are available immediately.', banCls:'ban-new', banSvg:'<circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/>', banTitle:'Welcome — Tier 1 active, score building', banText:'Basic access is live. History arrives with a 48h delay until your score grows.', showCta:false, tog:true, scoreNum:'47', scoreCls:'sn-low', progCls:'pf-1', tier:'Tier 1 — Contributor', delta:'+47 this week', deltaCls:'pos', svHist:'8', svHistCls:'sv-partial', sdHist:'+48h delay', svScore:'47', sdScore:'+47 this wk', svOut:'—', sdOut:'Unlocks T2', aiText:'<strong>Heidi insight:</strong> Contribute 53 more records to reach Tier 2 and unlock outcome benchmarking. Your history delay drops as your score increases.', nwPct:35, nwCount:614, p1b:'hb-delay', p1t:'Delayed — 36h', p2b:'hb-part', p2t:'Partial history' },
+  'mid': { name:'Harbour Physio', title:'Harbour Physio — <em>Tier 2 Access</em>', sub:'Three months in. Your contribution score unlocks outcome benchmarking and 70% of available patient history.', banCls:'ban-mid', banSvg:'<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>', banTitle:'Tier 2 active — 70% history access', banText:"You're outperforming 61% of clinics on intake speed. 288 score remaining to reach Tier 3.", showCta:false, tog:true, scoreNum:'412', scoreCls:'sn-mid', progCls:'pf-2', tier:'Tier 2 — Established', delta:'+88 this month', deltaCls:'pos', svHist:'17', svHistCls:'sv-partial', sdHist:'70% access', svScore:'412', sdScore:'+88 this mo', svOut:'3.8/5', sdOut:'Top 39%', aiText:'<strong>Heidi insight:</strong> Your outcome index of 3.8 is above the network median of 3.4. Reaching Tier 3 will surface this to patients searching on Kinetic Connect.', nwPct:38, nwCount:684, p1b:'hb-part', p1t:'70% history', p2b:'hb-part', p2t:'70% history' },
+  'high': { name:'Apex Rehabilitation', title:'Apex Rehabilitation — <em>Tier 4</em>', sub:'Top 8% of the network. Full history access, instant retrieval, priority feature input, and complete outcome benchmarking.', banCls:'ban-hi', banSvg:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>', banTitle:'Tier 4 — Full network access', banText:'1,847 treatment records contributed. Full history, instant access, priority roadmap input.', showCta:false, tog:true, scoreNum:'1847', scoreCls:'sn-hi', progCls:'pf-hi', tier:'Tier 4 — Top Contributor', delta:'+340 this month', deltaCls:'pos', svHist:'24', svHistCls:'sv-full', sdHist:'Full access', svScore:'1,847', sdScore:'+340 this mo', svOut:'4.2/5', sdOut:'Top 8%', aiText:'<strong>Heidi insight:</strong> Your outcome index of 4.2 places you in the top 8% of the network. You are ranked #1 in patient-facing search results for your area.', nwPct:42, nwCount:756, p1b:'hb-full', p1t:'Full history', p2b:'hb-full', p2t:'Full history' }
+};
+
+let currentClinic = 'opted-out';
+
+function setClinic(id) {
+  currentClinic = id;
+  const d = DATA[id];
+  document.querySelectorAll('.sb-clinic').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + id).classList.add('active');
+  document.querySelectorAll('.mob-clinic-chip').forEach(b => b.classList.remove('active'));
+  document.getElementById('mc-' + id).classList.add('active');
+
+  document.getElementById('bc').textContent = d.name;
+  document.getElementById('dash-title').innerHTML = d.title;
+  document.getElementById('dash-sub').textContent = d.sub;
+
+  const ban = document.getElementById('banner');
+  ban.className = 'banner ' + d.banCls;
+  ban.querySelector('#ban-svg').innerHTML = d.banSvg;
+  document.getElementById('ban-title').textContent = d.banTitle;
+  document.getElementById('ban-text').textContent = d.banText;
+  document.getElementById('ban-cta').style.display = d.showCta ? 'inline-block' : 'none';
+  document.getElementById('tog').checked = d.tog;
+
+  const svH = document.getElementById('sv-hist');
+  svH.textContent = d.svHist; svH.className = 'stat-val ' + d.svHistCls;
+  document.getElementById('sd-hist').textContent = d.sdHist;
+  document.getElementById('sv-score').textContent = d.svScore;
+  document.getElementById('sd-score').textContent = d.sdScore;
+  document.getElementById('sv-out').textContent = d.svOut;
+  document.getElementById('sd-out').textContent = d.sdOut;
+
+  const sn = document.getElementById('score-num');
+  sn.textContent = d.scoreNum; sn.className = 'score-num ' + d.scoreCls;
+  document.getElementById('score-tier').textContent = d.tier;
+  const sd = document.getElementById('score-delta');
+  sd.textContent = d.delta; sd.className = 'score-delta ' + d.deltaCls;
+  document.getElementById('prog-fill').className = 'prog-fill ' + d.progCls;
+  document.getElementById('ai-text').innerHTML = d.aiText;
+  document.getElementById('nw-fill').style.width = d.nwPct + '%';
+  document.getElementById('nw-pct').textContent = d.nwPct + '%';
+  document.getElementById('nw-sub').textContent = d.nwCount + ' of 1,800 clinics';
+
+  renderPatients(id);
+}
+
+function renderPatients(id) {
+  const d = DATA[id];
+  [['p1','MH','M. Harrison','DOB: 1986 · 3 prior clinics on network',d.p1b,d.p1t,'p1'],
+   ['p2','RL','R. Lim','DOB: 1994 · 1 prior clinic on network',d.p2b,d.p2t,'p2']].forEach(([el,init,name,meta,badge,btext,pid]) => {
+    document.getElementById(el).innerHTML = `<div class="p-card"><div class="p-head"><div class="p-av">${init}</div><div class="p-info"><div class="p-name">${name}</div><div class="p-meta">${meta}</div></div><div class="h-badge ${badge}"><div class="hb-pulse"></div>${btext}</div></div><div class="p-body">${getBody(id, pid)}</div></div>`;
+  });
+}
+
+function getBody(cid, pid) {
+  if (cid === 'opted-out') return `<div class="locked-state"><div class="lock-icon-wrap"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="locked-title">History locked</div><div class="locked-sub">This patient has prior treatment on the network. Opt in to access it.</div><button class="outline-btn" onclick="setView('dashboard')">View access tiers</button></div>`;
+  if (cid === 'new') {
+    if (pid === 'p1') return `<div class="delay-notice"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Available in ~36 hours — contribution score is building.</div><p style="font-size:12px;color:var(--text-3);">Protocol summaries appear here once the access delay expires. Build your score to reduce this to instant access.</p>`;
+    return `<div class="timeline"><div class="tl-item tl-part"><div class="tl-date">Recent — exact date unlocks at Tier 2</div><div class="tl-clinic">Prior clinic — identity withheld</div><div class="tl-summary">6 sessions. Lower limb. Protocol: exercise-based.</div><div class="tl-tags"><span class="tag tag-b">exercise</span><span class="tag">lower limb</span><span class="tag">outcome: 3/5</span></div></div></div>`;
+  }
+  if (cid === 'mid') {
+    if (pid === 'p1') return `<div class="timeline"><div class="tl-item tl-part"><div class="tl-date">~8 months ago</div><div class="tl-clinic">Prior clinic — identity withheld</div><div class="tl-summary">4 sessions. Cervical/thoracic. Manual therapy. Outcome: 4/5.</div><div class="tl-tags"><span class="tag tag-b">manual therapy</span><span class="tag">cervical</span><span class="tag tag-g">4/5</span></div></div><div class="tl-item"><div class="tl-date">~2 years ago</div><div class="tl-clinic">Prior clinic — identity withheld</div><div class="tl-summary blurred">Summary available at Tier 3 — 288 score remaining.</div></div></div>`;
+    return `<div class="timeline"><div class="tl-item tl-part"><div class="tl-date">~3 months ago</div><div class="tl-clinic">Prior clinic — identity withheld</div><div class="tl-summary">9 sessions. Knee. Combined protocol. Did not complete discharge.</div><div class="tl-tags"><span class="tag">knee</span><span class="tag tag-b">combined</span><span class="tag">incomplete</span></div></div></div>`;
+  }
+  if (cid === 'high') {
+    if (pid === 'p1') return `<div class="timeline"><div class="tl-item tl-active"><div class="tl-date">7 months ago</div><div class="tl-clinic">Prior clinic — identity withheld</div><div class="tl-summary">4 sessions, cervical/thoracic. Manual therapy. Strong response. Outcome: 4/5.</div><div class="tl-tags"><span class="tag tag-b">manual therapy</span><span class="tag">cervical</span><span class="tag tag-g">4/5</span></div></div><div class="tl-item tl-active"><div class="tl-date">2.5 years ago</div><div class="tl-clinic">Prior clinic — identity withheld</div><div class="tl-summary">11 sessions, shoulder. Exercise + manual. Full resolution: 5/5.</div><div class="tl-tags"><span class="tag tag-b">exercise</span><span class="tag">shoulder</span><span class="tag tag-g">5/5</span></div></div></div>`;
+    return `<div class="timeline"><div class="tl-item tl-active"><div class="tl-date">3 months ago</div><div class="tl-clinic">Prior clinic — identity withheld</div><div class="tl-summary">9 sessions, knee. Combined protocol. Did not complete discharge — note for continuity.</div><div class="tl-tags"><span class="tag">knee</span><span class="tag tag-b">combined</span><span class="tag">incomplete</span></div></div></div>`;
+  }
+}
+
+function setView(v) {
+  document.querySelectorAll('.view').forEach(e => e.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  ['dashboard','patients','data','simulator'].forEach(n => {
+    document.getElementById('nav-' + n).classList.toggle('active', n === v);
+    document.getElementById('mn-' + n).classList.toggle('active', n === v);
+  });
+  if (window.innerWidth <= 768) closeSidebar();
+}
+
+function handleToggle(el) {
+  if (el.checked && currentClinic === 'opted-out') setTimeout(() => setClinic('new'), 200);
+  else if (!el.checked && currentClinic !== 'opted-out') setTimeout(() => setClinic('opted-out'), 200);
+}
+
+function doOptIn() { document.getElementById('tog').checked = true; setClinic('new'); }
+
+const SIMS = {
+  1: { n:['sharing','sharing','opted-out','','','opted-out'], l:['Sharing','Sharing','Opted out','Undecided','Undecided','Opted out'], o:'<strong>Phase 1 — Early adopters (19%):</strong> Clinics A and B joined early. Their scores compound while everyone else\'s stays at zero. C and F opted out — locked history banners daily. D and E are watching. The access gap is becoming visible.', pct:19 },
+  2: { n:['sharing','sharing','sharing','sharing','','opted-out'], l:['Sharing','Sharing','Joined','Joined','Undecided','Opted out'], o:'<strong>Phase 2 — Mid adopters (45%):</strong> C and D joined after seeing A and B\'s faster intake. Non-sharers miss history on nearly half their patients. E is on the edge. F is increasingly isolated.', pct:45 },
+  3: { n:['sharing','sharing','sharing','sharing','sharing','opted-out'], l:['Sharing','Sharing','Sharing','Sharing','Joined','Isolated'], o:'<strong>Phase 3 — Market norm (80%+):</strong> E joined because the cost became too high. F is now an outlier. Patients ask why their history isn\'t being used. Referrers prefer connected clinics. The network enforces itself.', pct:82 }
+};
+
+function runSim(p) {
+  const s = SIMS[p];
+  [1,2,3].forEach(i => document.getElementById('st'+i).classList.toggle('active', i===p));
+  s.n.forEach((st,i) => { document.getElementById('sn'+i).className='node-c'+(st?' '+st:''); });
+  s.l.forEach((l,i) => { document.getElementById('nl'+i).textContent=l; });
+  document.getElementById('sim-out').innerHTML = s.o;
+  document.getElementById('nw-fill').style.width = s.pct+'%';
+  document.getElementById('nw-pct').textContent = s.pct+'%';
+  document.getElementById('nw-sub').textContent = Math.round(s.pct/100*1800)+' of 1,800 clinics';
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sb-overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('open');
+}
+
+setClinic('opted-out');
+</script>
+</body>
+</html>

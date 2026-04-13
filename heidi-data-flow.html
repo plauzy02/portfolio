@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heidi — How Data Sharing Works</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #EFC84A;
+    --yellow-dark: #D4A820;
+    --yellow-dim: rgba(239,200,74,0.10);
+    --yellow-border: rgba(239,200,74,0.22);
+    --navy: #0E0F1A;
+    --navy-2: #13141F;
+    --navy-3: #1A1B28;
+    --navy-4: #222336;
+    --navy-5: #2C2D42;
+    --text-1: #FFFFFF;
+    --text-2: #A8ABBE;
+    --text-3: #606278;
+    --text-4: #404256;
+    --green: #22C55E;
+    --green-dim: rgba(34,197,94,0.10);
+    --green-border: rgba(34,197,94,0.22);
+    --blue: #60A5FA;
+    --blue-dim: rgba(96,165,250,0.10);
+    --blue-border: rgba(96,165,250,0.22);
+    --red: #EF4444;
+    --red-dim: rgba(239,68,68,0.10);
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', monospace;
+    --r: 8px; --r-lg: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    color: var(--text-1);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--navy-2);
+    border-bottom: 1px solid var(--navy-4);
+    padding: 0 32px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .h-logo {
+    width: 28px; height: 28px;
+    background: var(--yellow);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; flex-shrink: 0;
+  }
+  .h-logo span { font-size: 15px; font-weight: 800; color: var(--navy); }
+  .h-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--navy-2); position: absolute; top: 1px; right: 1px; }
+
+  .topbar-name { font-size: 15px; font-weight: 700; color: var(--text-1); letter-spacing: -0.3px; }
+  .topbar-sep { color: var(--navy-5); font-size: 18px; font-weight: 300; }
+  .topbar-page { font-size: 13px; color: var(--text-3); font-family: var(--mono); }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 36px 32px 0;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; font-family: var(--mono); color: var(--yellow);
+    background: var(--yellow-dim); border: 1px solid var(--yellow-border);
+    padding: 4px 11px; border-radius: 20px; margin-bottom: 14px;
+  }
+  .eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--yellow); animation: pulse 2s ease infinite; }
+
+  .page-h { font-size: 28px; font-weight: 700; letter-spacing: -0.6px; margin-bottom: 8px; line-height: 1.15; }
+  .page-h em { font-style: italic; color: var(--yellow); font-weight: 400; }
+  .page-sub { font-size: 13px; color: var(--text-2); line-height: 1.7; max-width: 580px; }
+
+  /* ── MAIN LAYOUT ── */
+  .content { max-width: 860px; margin: 0 auto; padding: 32px 32px 0; }
+
+  /* ── THE ONE ACTION ── */
+  .one-action {
+    background: var(--navy-3);
+    border: 1px solid var(--navy-5);
+    border-radius: var(--r-lg);
+    padding: 24px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.4s 0.05s ease both;
+  }
+
+  .one-action::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--yellow-dark), var(--yellow));
+  }
+
+  .oa-label {
+    font-size: 10px; font-family: var(--mono); color: var(--text-4);
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;
+  }
+
+  .oa-session {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 20px;
+    background: var(--navy-4);
+    border: 1px solid var(--navy-5);
+    border-radius: var(--r);
+    margin-bottom: 20px;
+    flex-wrap: wrap; gap: 12px;
+  }
+
+  .oa-icon {
+    width: 40px; height: 40px; border-radius: var(--r);
+    background: var(--yellow-dim);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .oa-icon svg { width: 20px; height: 20px; stroke: var(--yellow); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  .oa-info { flex: 1; min-width: 180px; }
+  .oa-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .oa-desc { font-size: 12px; color: var(--text-3); }
+
+  .oa-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--yellow); color: var(--navy);
+    border: none; border-radius: var(--r);
+    padding: 10px 18px; font-size: 13px; font-weight: 700;
+    cursor: pointer; font-family: var(--sans);
+    transition: background 0.15s;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .oa-btn:hover { background: var(--yellow-dark); }
+  .oa-btn svg { width: 15px; height: 15px; stroke: var(--navy); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .oa-btn.active { background: var(--green); }
+
+  /* ARROW DOWN */
+  .arrow-down {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0; margin: 0 auto 0;
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .arrow-down.visible { opacity: 1; }
+  .arrow-line { width: 1px; height: 28px; background: linear-gradient(180deg, var(--yellow), rgba(239,200,74,0.3)); }
+  .arrow-head { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid rgba(239,200,74,0.5); }
+
+  /* ── SPLIT FLOW ── */
+  .split-flow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+    opacity: 0; transform: translateY(12px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+  .split-flow.visible { opacity: 1; transform: translateY(0); }
+
+  .flow-card {
+    border-radius: var(--r-lg);
+    border: 1px solid;
+    overflow: hidden;
+  }
+
+  .flow-card.patient-card {
+    background: var(--blue-dim);
+    border-color: var(--blue-border);
+  }
+
+  .flow-card.network-card {
+    background: var(--yellow-dim);
+    border-color: var(--yellow-border);
+  }
+
+  .flow-head {
+    padding: 14px 16px;
+    border-bottom: 1px solid;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .patient-card .flow-head { border-color: var(--blue-border); }
+  .network-card .flow-head { border-color: var(--yellow-border); }
+
+  .flow-head-icon {
+    width: 30px; height: 30px; border-radius: var(--r);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .patient-card .flow-head-icon { background: var(--blue-dim); }
+  .network-card .flow-head-icon { background: var(--yellow-dim); }
+  .flow-head-icon svg { width: 15px; height: 15px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .patient-card .flow-head-icon svg { stroke: var(--blue); }
+  .network-card .flow-head-icon svg { stroke: var(--yellow); }
+
+  .flow-head-text { flex: 1; }
+  .flow-head-title { font-size: 13px; font-weight: 600; }
+  .patient-card .flow-head-title { color: var(--blue); }
+  .network-card .flow-head-title { color: var(--yellow); }
+  .flow-head-sub { font-size: 10px; color: var(--text-3); font-family: var(--mono); margin-top: 1px; }
+
+  .flow-body { padding: 14px 16px; }
+
+  .flow-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    margin-bottom: 10px;
+  }
+  .flow-item:last-child { margin-bottom: 0; }
+
+  .flow-item-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 5px;
+  }
+  .patient-card .flow-item-dot { background: var(--blue); }
+  .network-card .flow-item-dot { background: var(--yellow); }
+
+  .flow-item-text { font-size: 12px; color: var(--text-2); line-height: 1.55; }
+  .flow-item-text strong { color: var(--text-1); }
+
+  .flow-never {
+    display: flex; align-items: center; gap: 6px;
+    margin-top: 12px; padding: 8px 10px;
+    background: var(--red-dim); border: 1px solid rgba(239,68,68,0.2);
+    border-radius: var(--r);
+    font-size: 11px; color: var(--red); font-family: var(--mono); font-weight: 500;
+  }
+  .flow-never svg { width: 12px; height: 12px; stroke: var(--red); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+  /* ── KEY PRINCIPLE ── */
+  .principle {
+    background: var(--navy-3); border: 1px solid var(--navy-5);
+    border-radius: var(--r-lg); padding: 20px;
+    margin-bottom: 20px;
+    display: flex; align-items: flex-start; gap: 14px;
+    animation: fadeUp 0.4s 0.15s ease both;
+  }
+
+  .principle-orb {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    background: radial-gradient(circle at 35% 35%, #fde68a, var(--yellow), var(--yellow-dark));
+    box-shadow: 0 0 16px rgba(239,200,74,0.25);
+  }
+
+  .principle-text { flex: 1; }
+  .principle-label { font-size: 10px; font-family: var(--mono); color: var(--yellow); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .principle-body { font-size: 14px; color: var(--text-2); line-height: 1.7; }
+  .principle-body strong { color: var(--text-1); }
+
+  /* ── WHAT STAYS PROTECTED ── */
+  .protected-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.4s 0.2s ease both;
+  }
+
+  .prot-card {
+    background: var(--navy-3); border: 1px solid var(--navy-5);
+    border-radius: var(--r-lg); padding: 14px;
+  }
+
+  .prot-icon {
+    width: 28px; height: 28px; border-radius: var(--r);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 10px;
+  }
+  .prot-icon svg { width: 14px; height: 14px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .prot-icon.red { background: var(--red-dim); }
+  .prot-icon.red svg { stroke: var(--red); }
+  .prot-icon.yellow { background: var(--yellow-dim); }
+  .prot-icon.yellow svg { stroke: var(--yellow); }
+  .prot-icon.green { background: var(--green-dim); }
+  .prot-icon.green svg { stroke: var(--green); }
+
+  .prot-title { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+  .prot-body { font-size: 11px; color: var(--text-3); line-height: 1.55; }
+
+  /* ── CONSENT FLOW ── */
+  .consent-flow {
+    background: var(--navy-3); border: 1px solid var(--navy-5);
+    border-radius: var(--r-lg); overflow: hidden;
+    margin-bottom: 20px;
+    animation: fadeUp 0.4s 0.25s ease both;
+  }
+
+  .cf-header {
+    background: var(--navy-4); border-bottom: 1px solid var(--navy-5);
+    padding: 12px 16px;
+    font-size: 10px; font-family: var(--mono); color: var(--text-4);
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+
+  .cf-steps {
+    display: flex; align-items: stretch;
+    padding: 20px;
+    gap: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .cf-step {
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; flex: 1; min-width: 110px;
+  }
+
+  .cf-step-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--navy-4); border: 2px solid var(--navy-5);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--text-3);
+    margin-bottom: 10px; flex-shrink: 0;
+  }
+
+  .cf-step.active .cf-step-num {
+    background: var(--yellow-dim);
+    border-color: var(--yellow);
+    color: var(--yellow);
+  }
+
+  .cf-step-title { font-size: 12px; font-weight: 600; margin-bottom: 4px; line-height: 1.3; }
+  .cf-step-desc { font-size: 11px; color: var(--text-3); line-height: 1.5; }
+
+  .cf-connector {
+    width: 40px; height: 1px;
+    background: var(--navy-5);
+    margin-top: 16px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .cf-connector::after {
+    content: '';
+    position: absolute; right: -4px; top: -4px;
+    width: 0; height: 0;
+    border-left: 6px solid var(--navy-5);
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .topbar, .page-header, .content { padding-left: 16px; padding-right: 16px; }
+    .split-flow { grid-template-columns: 1fr; }
+    .protected-grid { grid-template-columns: 1fr 1fr; }
+    .protected-grid .prot-card:last-child { grid-column: span 2; }
+    .page-h { font-size: 22px; }
+    .cf-steps { gap: 0; }
+    .cf-step { min-width: 90px; }
+    .cf-connector { width: 24px; }
+  }
+
+  @media (max-width: 420px) {
+    .protected-grid { grid-template-columns: 1fr; }
+    .protected-grid .prot-card:last-child { grid-column: auto; }
+    .oa-session { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="h-logo"><span>H</span><div class="h-dot"></div></div>
+  <div class="topbar-name">heidi</div>
+  <div class="topbar-sep">/</div>
+  <div class="topbar-page">Kinetic Network · How Data Sharing Works</div>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="eyebrow"><div class="eyebrow-dot"></div>Design insight · Session → Network</div>
+  <h1 class="page-h">One action.<br><em>Two outcomes.</em></h1>
+  <p class="page-sub">When a clinician completes a Heidi session, a single "complete & share" action simultaneously gives the patient a portable history record and contributes abstracted data to the Kinetic network. The clinician does one thing. The system does two.</p>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- THE ONE ACTION -->
+  <div class="one-action">
+    <div class="oa-label">The trigger — end of session</div>
+    <div class="oa-session">
+      <div class="oa-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </div>
+      <div class="oa-info">
+        <div class="oa-title">Heidi session complete</div>
+        <div class="oa-desc">AI transcript and structured summary ready · M. Harrison · Lower back · 48 min</div>
+      </div>
+      <button class="oa-btn" id="share-btn" onclick="triggerShare()">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Complete & share
+      </button>
+    </div>
+
+    <div class="arrow-down" id="arrow-1">
+      <div class="arrow-line"></div>
+      <div class="arrow-head"></div>
+    </div>
+  </div>
+
+  <!-- SPLIT FLOW -->
+  <div class="split-flow" id="split-flow">
+    <!-- PATIENT SIDE -->
+    <div class="flow-card patient-card">
+      <div class="flow-head">
+        <div class="flow-head-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="flow-head-text">
+          <div class="flow-head-title">Patient profile</div>
+          <div class="flow-head-sub">Patient-owned · Portable · Consent-native</div>
+        </div>
+      </div>
+      <div class="flow-body">
+        <div class="flow-item">
+          <div class="flow-item-dot"></div>
+          <div class="flow-item-text"><strong>Full AI session summary</strong> added to patient's portable health record</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-item-dot"></div>
+          <div class="flow-item-text">Patient can <strong>present this at any future clinic</strong> — no login, no transfer request</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-item-dot"></div>
+          <div class="flow-item-text">Patient <strong>controls consent</strong> — they choose what the next clinic sees</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-item-dot"></div>
+          <div class="flow-item-text">Aligns with <strong>MyHealthRecord (AU)</strong> and global patient-held record direction</div>
+        </div>
+        <div class="flow-never">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          Raw notes never leave without explicit patient consent
+        </div>
+      </div>
+    </div>
+
+    <!-- NETWORK SIDE -->
+    <div class="flow-card network-card">
+      <div class="flow-head">
+        <div class="flow-head-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div class="flow-head-text">
+          <div class="flow-head-title">Kinetic network</div>
+          <div class="flow-head-sub">Abstracted · Anonymous · Structured</div>
+        </div>
+      </div>
+      <div class="flow-body">
+        <div class="flow-item">
+          <div class="flow-item-dot"></div>
+          <div class="flow-item-text">Heidi AI <strong>extracts only structured fields</strong> — no raw text enters the network</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-item-dot"></div>
+          <div class="flow-item-text">Fields shared: <strong>session count, protocol category, ICD code, outcome score</strong></div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-item-dot"></div>
+          <div class="flow-item-text">Contribution <strong>score increments</strong> — unlocking access tiers and improving search rank</div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-item-dot"></div>
+          <div class="flow-item-text">Clinic identity is <strong>never attached</strong> to the contributed record</div>
+        </div>
+        <div class="flow-never">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          Clinician opinions, notes & identifiers never transmitted
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRINCIPLE -->
+  <div class="principle">
+    <div class="principle-orb"></div>
+    <div class="principle-text">
+      <div class="principle-label">Core design principle</div>
+      <div class="principle-body">Both fears are addressed by what the system <strong>structurally cannot do</strong> — not what it promises. The patient profile model eliminates switching fear because <strong>no clinic identity is ever surfaced</strong>. The abstraction layer eliminates judgment fear because <strong>no clinical opinion ever enters the network</strong>. Clinics don't need to trust Heidi. The architecture makes the risk impossible.</div>
+    </div>
+  </div>
+
+  <!-- WHAT STAYS PROTECTED -->
+  <div style="font-size:10px;font-family:var(--mono);color:var(--text-4);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">What stays protected at every step</div>
+  <div class="protected-grid">
+    <div class="prot-card">
+      <div class="prot-icon red">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div class="prot-title">No clinic discovery</div>
+      <div class="prot-body">The receiving clinic never learns who previously treated the patient. History is patient-owned, not clinic-linked. Switching fear: eliminated.</div>
+    </div>
+    <div class="prot-card">
+      <div class="prot-icon red">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <div class="prot-title">No raw notes shared</div>
+      <div class="prot-body">Clinician opinions, subjective assessments and session notes never leave the originating clinic. Only structured outcome fields are extracted. Judgment fear: eliminated.</div>
+    </div>
+    <div class="prot-card">
+      <div class="prot-icon yellow">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="prot-title">Patient controls consent</div>
+      <div class="prot-body">The patient decides what the next clinic sees when they present their profile. Consent is active and revocable — not assumed or buried in a policy.</div>
+    </div>
+  </div>
+
+  <!-- CONSENT FLOW -->
+  <div class="consent-flow">
+    <div class="cf-header">How a patient presents history at a new clinic</div>
+    <div class="cf-steps">
+      <div class="cf-step active">
+        <div class="cf-step-num">1</div>
+        <div class="cf-step-title">Session ends</div>
+        <div class="cf-step-desc">Clinician hits Complete & Share. Summary goes to patient profile.</div>
+      </div>
+      <div class="cf-connector"></div>
+      <div class="cf-step active">
+        <div class="cf-step-num">2</div>
+        <div class="cf-step-title">Patient books</div>
+        <div class="cf-step-desc">Patient finds and books a new clinic via Kinetic Connect.</div>
+      </div>
+      <div class="cf-connector"></div>
+      <div class="cf-step active">
+        <div class="cf-step-num">3</div>
+        <div class="cf-step-title">Consent granted</div>
+        <div class="cf-step-desc">At booking, patient selects what history the new clinic can access.</div>
+      </div>
+      <div class="cf-connector"></div>
+      <div class="cf-step active">
+        <div class="cf-step-num">4</div>
+        <div class="cf-step-title">History unlocks</div>
+        <div class="cf-step-desc">New clinic sees structured history within their access tier. No clinic identity surfaced.</div>
+      </div>
+      <div class="cf-connector"></div>
+      <div class="cf-step">
+        <div class="cf-step-num">5</div>
+        <div class="cf-step-title">Score updates</div>
+        <div class="cf-step-desc">Contributing clinic's score increments. Access tier and search rank improve.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function triggerShare() {
+  const btn = document.getElementById('share-btn');
+  btn.textContent = '✓ Shared';
+  btn.classList.add('active');
+  btn.style.pointerEvents = 'none';
+
+  setTimeout(() => {
+    document.getElementById('arrow-1').classList.add('visible');
+  }, 300);
+
+  setTimeout(() => {
+    document.getElementById('split-flow').classList.add('visible');
+  }, 700);
+}
+</script>
+</body>
+</html>
